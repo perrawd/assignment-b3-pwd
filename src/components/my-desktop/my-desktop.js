@@ -28,9 +28,16 @@ template.innerHTML = `
       margin: 0;
       padding: 0;
     }
+    #item {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background-color: #ffffff;
+    }
   </style>
 <my-dock></my-dock>
   <p part="text">hello</p>
+  <div id="item"></div>
 `
 
 /**
@@ -56,6 +63,7 @@ customElements.define('my-desktop',
       this._textElement = this.shadowRoot.querySelector('p')
 
       // TODO: Maybee you need to define some default values here
+      this.item = this.shadowRoot.querySelector('#item')
     }
 
     /**
@@ -88,6 +96,7 @@ customElements.define('my-desktop',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
+      this.item.addEventListener('mousedown', this.moveWindow)
     }
 
     /**
@@ -95,18 +104,37 @@ customElements.define('my-desktop',
      */
     disconnectedCallback () {
       // TODO: Remove your eventlisterners here.
-      this.removeEventListener('mousedown', this._onWrite)
-      this.removeEventListener('mouseup', this.stopWriting)
-      this.removeEventListener('mouseleave', this.stopWriting)
     }
 
     /**
      * Stops the writing.
-     *
+     * @param event {*}
      */
-    stopWriting () {
+    moveWindow (event) {
+      console.log(this)
       // TODO: Implement the method
-      clearTimeout(this.timeoutID)
+      this.addEventListener('mousemove', mousemove)
+      this.addEventListener('mouseup', mouseup)
+
+      let prevX = event.clientX
+      let prevY = event.clientY
+
+      function mousemove (event) {
+        let newX = prevX - event.clientX
+        let newY = prevY - event.clientY
+        const rect = this.getBoundingClientRect()
+
+        this.style.left = rect.left - newX + 'px'
+        this.style.top = rect.top - newY + 'px'
+
+        prevX = event.clientX
+        prevY = event.clientY
+      }
+
+      function mouseup (event) {
+        this.removeEventListener('mousemove', mousemove)
+        this.removeEventListener('mouseup', mouseup)
+      }
     }
 
     /**
