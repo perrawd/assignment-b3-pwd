@@ -1,13 +1,12 @@
 /**
- * The my-desktop web component module.
+ * The bart-board web component module.
  *
  * @author Johan Leitet <johan.leitet@lnu.se>
  * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 2.0.0
  */
-import '../my-dock/'
-import '../my-about-app/'
+
 /**
  * Define template.
  */
@@ -15,39 +14,25 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      display: inline-block;
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
-      background: url(images/bg.jpg) no-repeat center center fixed; 
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
+      display: block;
+      background: blue;
+      width:400px;
+      height:400px;
+      text-align: center;
     }
     p {
       margin: 0;
       padding: 0;
     }
-    #item {
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      background-color: #ffffff;
-      contain: content;
-      left: 0;
-    }
   </style>
-<my-dock></my-dock>
-  <p part="text">hello</p>
-  <div id="item"></div>
-  <my-about-app></my-about-app>
+
+  <p part="text">This is my Personal Web Desktop app!</p>
 `
 
 /**
  * Define custom element.
  */
-customElements.define('my-desktop',
+customElements.define('my-about-app',
 /**
  * Define custom element.
  */
@@ -67,8 +52,6 @@ customElements.define('my-desktop',
       this._textElement = this.shadowRoot.querySelector('p')
 
       // TODO: Maybee you need to define some default values here
-      this.item = this.shadowRoot.querySelector('#item')
-      this.about = this.shadowRoot.querySelector('my-about-app')
     }
 
     /**
@@ -101,8 +84,6 @@ customElements.define('my-desktop',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
-      this.item.addEventListener('mousedown', this.moveWindow)
-      this.about.addEventListener('mousedown', this.moveWindow)
     }
 
     /**
@@ -115,53 +96,9 @@ customElements.define('my-desktop',
     /**
      * Stops the writing.
      *
-     * @param {*} event The event.
      */
-    moveWindow (event) {
+    stopWriting () {
       // TODO: Implement the method
-      this.addEventListener('mousemove', mousemove)
-      this.addEventListener('mouseup', mouseup)
-      this.addEventListener('ondragover', restore)
-
-      let prevX = event.clientX
-      let prevY = event.clientY
-
-      /**
-       * Stops the writing.
-       *
-       * @param {*} event The event.
-       */
-      function mousemove (event) {
-        this.style.position = 'absolute'
-        const newX = prevX - event.clientX
-        const newY = prevY - event.clientY
-        const rect = this.getBoundingClientRect()
-        console.log(rect)
-        if (rect.y <= 0) { dispatchEvent(new Event('ondragover')) }
-        this.style.left = rect.left - newX + 'px'
-        this.style.top = rect.top - newY + 'px'
-
-        prevX = event.clientX
-        prevY = event.clientY
-      }
-
-      /**
-       * Stops the writing.
-       *
-       * @param {*} event The event.
-       */
-      function mouseup (event) {
-        this.removeEventListener('mousemove', mousemove)
-        this.removeEventListener('mouseup', mouseup)
-      }
-
-      /**
-       * Stops the writing.
-       *
-       */
-      function restore () {
-        this.style.left = '0'
-      }
     }
 
     /**
@@ -169,8 +106,6 @@ customElements.define('my-desktop',
      */
     clear () {
       // TODO: Implement the method
-      this._textElement.textContent = ''
-      this.i = 0
     }
     // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
   }
