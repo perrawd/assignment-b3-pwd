@@ -14,23 +14,28 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      display: inline-block;
-      background:#000000;
+      display: block;
+      background-color:rgba(0, 0, 0, 0.9);
       color: #ffffff;
-      text-align: center;
       width:50%;
-      height:70px;
-      border: 2px solid #ffffff;
+      height:60px;
+      border: 3px solid #000000;
       border-radius: 10px;
-      margin-left: auto;
-      margin-right: auto;
       position: fixed;
       bottom: 0;
-      right: 50%;
+      margin: auto;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+    #icons {
+      max-height: 55px;
+    }
+    img {
+      max-height: 55px;
     }
   </style>
-
-  <p part="text">MY DOCK</p>
+<div id="icons"><div>
 `
 
 /**
@@ -56,6 +61,9 @@ customElements.define('my-dock',
       this._textElement = this.shadowRoot.querySelector('p')
 
       // TODO: Maybee you need to define some default values here
+      this.icons = this.shadowRoot.querySelector('#icons')
+      this.pathToModule = import.meta.url
+      this.path = new URL('./icons/', this.pathToModule)
     }
 
     /**
@@ -88,6 +96,14 @@ customElements.define('my-dock',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
+      this.chat = document.createElement('img')
+      this.chat.setAttribute('src', `${this.path}chat.png`)
+      this.chat.setAttribute('title', 'Chat app')
+      this.icons.appendChild(this.chat)
+      this.memory = document.createElement('img')
+      this.memory.setAttribute('src', `${this.path}memorygame.png`)
+      this.memory.setAttribute('title', 'Memory game app')
+      this.icons.appendChild(this.memory)
     }
 
     /**
