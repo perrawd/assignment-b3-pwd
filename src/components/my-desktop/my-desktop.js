@@ -8,6 +8,7 @@
  */
 import '../my-dock/'
 import '../my-about-app/'
+import '../my-window/'
 /**
  * Define template.
  */
@@ -41,7 +42,7 @@ template.innerHTML = `
 <my-dock></my-dock>
   <p part="text">hello</p>
   <div id="item"></div>
-  <my-about-app></my-about-app>
+  <my-window></my-window>
 `
 
 /**
@@ -69,6 +70,8 @@ customElements.define('my-desktop',
       // TODO: Maybee you need to define some default values here
       this.item = this.shadowRoot.querySelector('#item')
       this.about = this.shadowRoot.querySelector('my-about-app')
+      this.window = this.shadowRoot.querySelector('my-window')
+      this.z = 0
     }
 
     /**
@@ -102,7 +105,8 @@ customElements.define('my-desktop',
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       this.item.addEventListener('mousedown', this.moveWindow)
-      this.about.addEventListener('mousedown', this.moveWindow)
+      // this.about.addEventListener('mousedown', this.moveWindow)
+      this.window.addEventListener('mousedown', this.moveWindow)
     }
 
     /**
@@ -132,11 +136,16 @@ customElements.define('my-desktop',
        * @param {*} event The event.
        */
       function mousemove (event) {
+        this.focus()
+        console.log(this.parentNode)
+        this.style.zIndex = '99'
         this.style.position = 'absolute'
         const newX = prevX - event.clientX
         const newY = prevY - event.clientY
         const rect = this.getBoundingClientRect()
         console.log(rect)
+        // Desktop offsetheight
+        console.log(this.parentNode.host.offsetHeight)
         if (rect.y <= 0) { dispatchEvent(new Event('ondragover')) }
         this.style.left = rect.left - newX + 'px'
         this.style.top = rect.top - newY + 'px'
@@ -151,6 +160,7 @@ customElements.define('my-desktop',
        * @param {*} event The event.
        */
       function mouseup (event) {
+        this.style.zIndex = 'auto'
         this.removeEventListener('mousemove', mousemove)
         this.removeEventListener('mouseup', mouseup)
       }
