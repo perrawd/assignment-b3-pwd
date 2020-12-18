@@ -41,7 +41,6 @@ template.innerHTML = `
   </style>
 <my-dock></my-dock>
   <p part="text">hello</p>
-  <div id="item"></div>
   <my-window></my-window>
 `
 
@@ -68,10 +67,8 @@ customElements.define('my-desktop',
       this._textElement = this.shadowRoot.querySelector('p')
 
       // TODO: Maybee you need to define some default values here
-      this.item = this.shadowRoot.querySelector('#item')
-      this.about = this.shadowRoot.querySelector('my-about-app')
       this.window = this.shadowRoot.querySelector('my-window')
-      this.z = 0
+      this.windowHeader = this.shadowRoot.querySelector('my-window').shadowRoot.querySelector('#window')
     }
 
     /**
@@ -104,9 +101,9 @@ customElements.define('my-desktop',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
-      this.item.addEventListener('mousedown', this.moveWindow)
+      // this.item.addEventListener('mousedown', this.moveWindow)
       // this.about.addEventListener('mousedown', this.moveWindow)
-      this.window.addEventListener('mousedown', this.moveWindow)
+      this.windowHeader.addEventListener('mousedown', this.moveWindow)
     }
 
     /**
@@ -137,18 +134,17 @@ customElements.define('my-desktop',
        */
       function mousemove (event) {
         this.focus()
-        console.log(this.parentNode)
-        this.style.zIndex = '99'
-        this.style.position = 'absolute'
+        this.parentNode.host.style.zIndex = '99'
+        this.parentNode.host.style.position = 'absolute'
         const newX = prevX - event.clientX
         const newY = prevY - event.clientY
-        const rect = this.getBoundingClientRect()
-        console.log(rect)
+        const rect = this.parentNode.host.getBoundingClientRect()
+        // console.log(rect)
         // Desktop offsetheight
-        console.log(this.parentNode.host.offsetHeight)
+        // console.log(this.parentNode.host.offsetHeight)
         if (rect.y <= 0) { dispatchEvent(new Event('ondragover')) }
-        this.style.left = rect.left - newX + 'px'
-        this.style.top = rect.top - newY + 'px'
+        this.parentNode.host.style.left = rect.left - newX + 'px'
+        this.parentNode.host.style.top = rect.top - newY + 'px'
 
         prevX = event.clientX
         prevY = event.clientY

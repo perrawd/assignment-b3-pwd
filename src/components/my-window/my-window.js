@@ -17,15 +17,14 @@ template.innerHTML = `
       display: inline-block;
       background-color: red;
       border: 3px solid red;
-      border-top: 25px solid red;
+      
       border-radius: 5px;
     }
     #window {
-
+      border-top: 25px solid red;
     }
   </style>
   <div part="window" id="window">
-    TEEEEEST
   </div>
   <my-about-app></my-about-app>
   
