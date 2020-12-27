@@ -27,7 +27,7 @@ template.innerHTML = `
   </style>
 
   <p part="text">This is my Personal Web Desktop app!</p>
-  <button>button1</button>
+  <button id="btn">button1</button>
 `
 
 /**
@@ -85,6 +85,9 @@ customElements.define('my-about-app',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
+      this.shadowRoot.querySelector('#btn').addEventListener('click', (e) => {
+        alert('clicked')
+      })
     }
 
     /**

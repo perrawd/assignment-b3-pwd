@@ -14,6 +14,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
+      position: absolute;
       display: inline-block;
       background-color: red;
       border: 3px solid red;
@@ -22,6 +23,7 @@ template.innerHTML = `
     #window {
       border-top: 25px solid red;
     }
+    
   </style>
   <div part="window" id="window">
   </div>
@@ -84,7 +86,8 @@ customElements.define('my-window',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
-      this._windowBar.addEventListener('mousedown', this.moveWindow)
+      // this._windowBar.addEventListener('mousedown', this.moveWindow)
+      this.dragWindow(this)
     }
 
     /**
@@ -108,62 +111,66 @@ customElements.define('my-window',
     clear () {
       // TODO: Implement the method
     }
+
     // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
 
     /**
-     * Stops the writing.
+     * Makes windows draggable across dekstop.
+     * Code inspired by https://www.w3schools.com/howto/howto_js_draggable.asp.
      *
-     * @param {*} event The event.
+     * @param {string} window of the attribute.
      */
-    moveWindow (event) {
-      // TODO: Implement the method
-      this.addEventListener('mousemove', mousemove)
-      this.addEventListener('mouseup', mouseup)
-      this.addEventListener('ondragover', restore)
+    dragWindow (window) {
+      const that = this
+      let pos1 = 0
+      let pos2 = 0
+      let pos3 = 0
+      let pos4 = 0
 
-      let prevX = event.clientX
-      let prevY = event.clientY
+      // The window bar of which
+      this._windowBar.onmousedown = dragMouseDown
 
       /**
-       * Stops the writing.
+       * On mousedown.
        *
-       * @param {*} event The event.
+       * @param {string} event of the attribute.
        */
-      function mousemove (event) {
-        this.focus()
-        this.parentNode.host.style.zIndex = '99'
-        this.parentNode.host.style.position = 'absolute'
-        const newX = prevX - event.clientX
-        const newY = prevY - event.clientY
-        const rect = this.parentNode.host.getBoundingClientRect()
-        // console.log(rect)
-        // Desktop offsetheight
-        // console.log(this.parentNode.host.offsetHeight)
-        if (rect.y <= 0) { dispatchEvent(new Event('ondragover')) }
-        this.parentNode.host.style.left = rect.left - newX + 'px'
-        this.parentNode.host.style.top = rect.top - newY + 'px'
-
-        prevX = event.clientX
-        prevY = event.clientY
+      function dragMouseDown (event) {
+        event = event || window.event
+        event.preventDefault()
+        // get the mouse cursor position at startup:
+        pos3 = event.clientX
+        pos4 = event.clientY
+        document.onmouseup = closeDragElement
+        // call a function whenever the cursor moves:
+        document.onmousemove = windowDrag
       }
 
       /**
-       * Stops the writing.
+       * Moves the window.
        *
-       * @param {*} event The event.
+       * @param {string} event The event.
        */
-      function mouseup (event) {
-        this.style.zIndex = 'auto'
-        this.removeEventListener('mousemove', mousemove)
-        this.removeEventListener('mouseup', mouseup)
+      function windowDrag (event) {
+        event = event || window.event
+        event.preventDefault()
+        // calculate the new cursor position:
+        pos1 = pos3 - event.clientX
+        pos2 = pos4 - event.clientY
+        pos3 = event.clientX
+        pos4 = event.clientY
+        // set the element's new position:
+        that.style.top = (that.offsetTop - pos2) + 'px'
+        that.style.left = (that.offsetLeft - pos1) + 'px'
       }
 
       /**
-       * Stops the writing.
+       * Stop moving when mouse button is released.
        *
        */
-      function restore () {
-        this.style.left = '0'
+      function closeDragElement () {
+        document.onmouseup = null
+        document.onmousemove = null
       }
     }
   }
