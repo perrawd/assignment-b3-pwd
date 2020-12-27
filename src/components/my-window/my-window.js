@@ -15,6 +15,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
+      z-Index: 100;
       position: absolute;
       display: inline-block;
       background: rgba(000, 000, 000, 0.85); 
@@ -162,6 +163,8 @@ customElements.define('my-window',
        * @param {string} event of the attribute.
        */
       function dragMouseDown (event) {
+        that.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => app.style.zIndex = Number(app.style.zIndex) - 1)
+        that.style.zIndex = '200'
         event = event || window.event
         event.preventDefault()
         // get the mouse cursor position at startup:
@@ -178,10 +181,8 @@ customElements.define('my-window',
        * @param {string} event The event.
        */
       function windowDrag (event) {
-        console.log(document.documentElement.clientWidth)
         event = event || window.event
         event.preventDefault()
-        console.log(that.getBoundingClientRect().x)
         if (that.getBoundingClientRect().y <= 0) {
           that.style.top = '1px'
           closeDragElement ()
