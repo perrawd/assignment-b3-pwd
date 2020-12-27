@@ -38,6 +38,9 @@ template.innerHTML = `
       border-radius: 50%;
       margin: 1px
     }
+    #close:hover {
+      cursor: default;
+    }
   </style>
   <div part="window" id="window">
   <div id="close">X</div>
