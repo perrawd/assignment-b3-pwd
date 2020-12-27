@@ -43,7 +43,6 @@ template.innerHTML = `
 <my-dock></my-dock>
   <p part="text">hello</p>
   <my-window app="my-about-app"></my-window>
-  <my-window app="my-messages-app"></my-window>
 `
 
 /**
@@ -111,6 +110,12 @@ customElements.define('my-desktop',
         console.log(event.detail.window)
         const thisWindow = event.detail.window
         this.shadowRoot.removeChild(thisWindow)
+      })
+      this.addEventListener('openApp', (event) => {
+        console.log(event.detail.name)
+        const myWindow = document.createElement('my-window')
+        myWindow.setAttribute('app', event.detail.name)
+        this.shadowRoot.appendChild(myWindow)
       })
     }
 

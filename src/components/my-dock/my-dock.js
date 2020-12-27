@@ -110,6 +110,13 @@ customElements.define('my-dock',
       this.memory.setAttribute('src', `${this.path}memorygame.png`)
       this.memory.setAttribute('title', 'Memory game app')
       this.icons.appendChild(this.memory)
+      this.chat.addEventListener('click', (e) => {
+        this.dispatchEvent(new CustomEvent('openApp', {
+          bubbles: true,
+          composed: true,
+          detail: { name: 'my-messages-app' }
+        }))
+      })
     }
 
     /**
