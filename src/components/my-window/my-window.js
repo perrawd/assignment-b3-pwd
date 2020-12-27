@@ -178,16 +178,32 @@ customElements.define('my-window',
        * @param {string} event The event.
        */
       function windowDrag (event) {
+        console.log(document.documentElement.clientWidth)
         event = event || window.event
         event.preventDefault()
-        // calculate the new cursor position:
-        pos1 = pos3 - event.clientX
-        pos2 = pos4 - event.clientY
-        pos3 = event.clientX
-        pos4 = event.clientY
-        // set the element's new position:
-        that.style.top = (that.offsetTop - pos2) + 'px'
-        that.style.left = (that.offsetLeft - pos1) + 'px'
+        console.log(that.getBoundingClientRect().x)
+        if (that.getBoundingClientRect().y <= 0) {
+          that.style.top = '1px'
+          closeDragElement ()
+      } else if (that.getBoundingClientRect().x <= 0) {
+        that.style.left = '1px'
+        closeDragElement ()
+    } else if (that.getBoundingClientRect().right >= document.documentElement.clientWidth) {
+      that.style.left = (document.documentElement.clientWidth - that.offsetWidth - 1) + 'px'
+      closeDragElement ()
+  } else if (that.getBoundingClientRect().bottom >= document.documentElement.clientHeight) {
+    that.style.top = (document.documentElement.clientHeight - that.offsetHeight - 1) + 'px'
+    closeDragElement ()
+}else {
+      // calculate the new cursor position:
+      pos1 = pos3 - event.clientX
+      pos2 = pos4 - event.clientY
+      pos3 = event.clientX
+      pos4 = event.clientY
+      // set the element's new position:
+      that.style.top = (that.offsetTop - pos2) + 'px'
+      that.style.left = (that.offsetLeft - pos1) + 'px'
+      }
       }
 
       /**

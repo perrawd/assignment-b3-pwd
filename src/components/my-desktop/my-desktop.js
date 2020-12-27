@@ -17,6 +17,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
+      padding: 1px;
       display: inline-block;
       width: 100%;
       height: 100%;
