@@ -17,20 +17,32 @@ template.innerHTML = `
     :host {
       position: absolute;
       display: inline-block;
-      background-color: red;
-      border: 3px solid red;
+      background: rgba(000, 000, 000, 0.85); 
+      border: 3px solid rgba(000, 000, 000, 0.85);
       border-radius: 7px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
     }
     #window {
       /*
       border-top: 25px solid red;
       */
+      
     }
-    
+    #close {
+      width: 18px;
+      height: 18px;
+      text-align: center;
+      background: rgb(131,58,180);
+      background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+      display: inline-block;
+      border-radius: 50%;
+      margin: 1px
+    }
   </style>
   <div part="window" id="window">
-  X
+  <div id="close">X</div>
   </div>
+  
 `
 
 /**
@@ -54,7 +66,7 @@ customElements.define('my-window',
 
       // Get the p-element in which we add the text.
       this._windowBar = this.shadowRoot.querySelector('#window')
-
+      this._closeButton = this.shadowRoot.querySelector('#close')
       // TODO: Maybee you need to define some default values here
     }
 
@@ -92,6 +104,13 @@ customElements.define('my-window',
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       // this._windowBar.addEventListener('mousedown', this.moveWindow)
       this.dragWindow(this)
+      this._closeButton.addEventListener('click', (e) => {
+        this.dispatchEvent(new CustomEvent('close', {
+          bubbles: true,
+          composed: true,
+          detail: { window: this }
+        }))
+      })
     }
 
     /**

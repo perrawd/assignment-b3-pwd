@@ -107,6 +107,11 @@ customElements.define('my-desktop',
       // this.item.addEventListener('mousedown', this.moveWindow)
       // this.about.addEventListener('mousedown', this.moveWindow)
       // this.windowHeader.addEventListener('mousedown', this.moveWindow)
+      this.addEventListener('close', (event) => {
+        console.log(event.detail.window)
+        const thisWindow = event.detail.window
+        this.shadowRoot.removeChild(thisWindow)
+      })
     }
 
     /**
