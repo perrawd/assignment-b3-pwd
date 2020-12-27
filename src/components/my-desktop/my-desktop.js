@@ -41,9 +41,9 @@ template.innerHTML = `
     }
   </style>
 <my-dock></my-dock>
-<my-messages-app></my-messages-app>
   <p part="text">hello</p>
-  <my-window></my-window>
+  <my-window app="my-about-app"></my-window>
+  <my-window app="my-messages-app"></my-window>
 `
 
 /**

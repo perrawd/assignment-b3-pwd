@@ -7,6 +7,7 @@
  * @version 2.0.0
  */
 import '../my-about-app/'
+import '../my-messages-app/'
 /**
  * Define template.
  */
@@ -21,14 +22,15 @@ template.innerHTML = `
       border-radius: 7px;
     }
     #window {
+      /*
       border-top: 25px solid red;
+      */
     }
     
   </style>
   <div part="window" id="window">
+  X
   </div>
-  <my-about-app></my-about-app>
-  
 `
 
 /**
@@ -64,7 +66,7 @@ customElements.define('my-window',
      */
     static get observedAttributes () {
       // TODO: Add observer for text and speed.
-      return ['text', 'speed']
+      return ['app']
     }
 
     /**
@@ -76,8 +78,10 @@ customElements.define('my-window',
      */
     attributeChangedCallback (name, oldValue, newValue) {
       // TODO: Add your code for handling updates and creation of the observed attributes.
-      if (name === 'text') { this.text = newValue + ' ' }
-      if (name === 'speed') { this.speed = newValue }
+      if (name === 'app') {
+        const addApp = document.createElement(newValue)
+        this.shadowRoot.appendChild(addApp)
+      }
     }
 
     /**
