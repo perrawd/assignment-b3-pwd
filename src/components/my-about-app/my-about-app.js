@@ -27,6 +27,7 @@ template.innerHTML = `
   </style>
 
   <p part="text">This is my Personal Web Desktop app!</p>
+  <button>button1</button>
 `
 
 /**

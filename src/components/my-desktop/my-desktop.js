@@ -9,6 +9,7 @@
 import '../my-dock/'
 import '../my-about-app/'
 import '../my-window/'
+import '../my-messages-app/'
 /**
  * Define template.
  */
@@ -40,6 +41,7 @@ template.innerHTML = `
     }
   </style>
 <my-dock></my-dock>
+<my-messages-app></my-messages-app>
   <p part="text">hello</p>
   <my-window></my-window>
 `
@@ -69,6 +71,7 @@ customElements.define('my-desktop',
       // TODO: Maybee you need to define some default values here
       this.window = this.shadowRoot.querySelector('my-window')
       this.windowHeader = this.shadowRoot.querySelector('my-window').shadowRoot.querySelector('#window')
+      this.chat = this.shadowRoot.querySelector('my-messages-app')
     }
 
     /**
@@ -103,7 +106,7 @@ customElements.define('my-desktop',
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       // this.item.addEventListener('mousedown', this.moveWindow)
       // this.about.addEventListener('mousedown', this.moveWindow)
-      this.windowHeader.addEventListener('mousedown', this.moveWindow)
+      // this.windowHeader.addEventListener('mousedown', this.moveWindow)
     }
 
     /**
@@ -111,63 +114,6 @@ customElements.define('my-desktop',
      */
     disconnectedCallback () {
       // TODO: Remove your eventlisterners here.
-    }
-
-    /**
-     * Stops the writing.
-     *
-     * @param {*} event The event.
-     */
-    moveWindow (event) {
-      // TODO: Implement the method
-      this.addEventListener('mousemove', mousemove)
-      this.addEventListener('mouseup', mouseup)
-      this.addEventListener('ondragover', restore)
-
-      let prevX = event.clientX
-      let prevY = event.clientY
-
-      /**
-       * Stops the writing.
-       *
-       * @param {*} event The event.
-       */
-      function mousemove (event) {
-        this.focus()
-        this.parentNode.host.style.zIndex = '99'
-        this.parentNode.host.style.position = 'absolute'
-        const newX = prevX - event.clientX
-        const newY = prevY - event.clientY
-        const rect = this.parentNode.host.getBoundingClientRect()
-        // console.log(rect)
-        // Desktop offsetheight
-        // console.log(this.parentNode.host.offsetHeight)
-        if (rect.y <= 0) { dispatchEvent(new Event('ondragover')) }
-        this.parentNode.host.style.left = rect.left - newX + 'px'
-        this.parentNode.host.style.top = rect.top - newY + 'px'
-
-        prevX = event.clientX
-        prevY = event.clientY
-      }
-
-      /**
-       * Stops the writing.
-       *
-       * @param {*} event The event.
-       */
-      function mouseup (event) {
-        this.style.zIndex = 'auto'
-        this.removeEventListener('mousemove', mousemove)
-        this.removeEventListener('mouseup', mouseup)
-      }
-
-      /**
-       * Stops the writing.
-       *
-       */
-      function restore () {
-        this.style.left = '0'
-      }
     }
 
     /**
