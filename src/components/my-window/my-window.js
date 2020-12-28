@@ -72,6 +72,7 @@ customElements.define('my-window',
       this._windowBar = this.shadowRoot.querySelector('#window')
       this._closeButton = this.shadowRoot.querySelector('#close')
       // TODO: Maybee you need to define some default values here
+      // this.path = new URL('./img/', this.pathToModule)
     }
 
     /**
@@ -106,6 +107,8 @@ customElements.define('my-window',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
+      // Default z-index
+      this.style.zIndex = 100
       // this._windowBar.addEventListener('mousedown', this.moveWindow)
       this.dragWindow(this)
       this._closeButton.addEventListener('click', (e) => {
