@@ -15,7 +15,6 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      z-Index: 100;
       position: absolute;
       display: inline-block;
       background: rgba(000, 000, 000, 0.85); 

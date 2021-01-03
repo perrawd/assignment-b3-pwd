@@ -94,6 +94,17 @@ customElements.define('my-messages-app',
       this._textInput = this.shadowRoot.querySelector('#textinput')
 
       // TODO: Maybee you need to define some default values here
+      // IndexedDB
+      this.request = indexedDB.open('mydatabase', 1)
+      this.request.onerror = function(event) {
+        console.error(event)
+      };
+      this.request.onupgradeneeded = function(event) {
+        const db = event.target.result
+      
+        // the ObjectStore
+        const objectStore = db.createObjectStore('messages')
+      }
     }
 
     /**
@@ -154,6 +165,14 @@ customElements.define('my-messages-app',
         d = d.toLocaleString('sv-SE')
         senderText.textContent = `${msg.username}: ${msg.data} (${d})`
         this._main.appendChild(senderText)
+        // Open IndexedDB transaction
+        const db = this.request.result
+        const transaction = db.transaction(['messages'], 'readwrite')
+        const objectStore = transaction.objectStore('messages')
+        // Add message to IndexedDB
+        if (msg.username !== 'The Server') {
+        objectStore.add({ name: msg.username, message: msg.data, date: d }, d)
+        }
       }
     }
 
