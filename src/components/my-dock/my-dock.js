@@ -117,6 +117,13 @@ customElements.define('my-dock',
           detail: { name: 'my-messages-app' }
         }))
       })
+      this.memory.addEventListener('click', (e) => {
+        this.dispatchEvent(new CustomEvent('openApp', {
+          bubbles: true,
+          composed: true,
+          detail: { name: 'my-memory-game' }
+        }))
+      })
     }
 
     /**
