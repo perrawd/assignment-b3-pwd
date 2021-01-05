@@ -16,13 +16,12 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-    width: 700px;
-    height: 500px;
+    width: auto;
+    height: auto;
     display: grid;
     grid-template-columns: 150px auto auto auto;
-    grid-template-rows: 40px 360px 100px;
+    grid-template-rows: 360px 100px;
     grid-template-areas:
-        "info header header header"
         "nav  main   main  main"
         "nav  form form form";
 
@@ -54,8 +53,6 @@ template.innerHTML = `
       padding: 5px;
     }
   </style>
-  <div id="info">INFO</div>
-  <header>HEADER</header>
   <nav>#wp20</nav>
   <main>MAIN</main>
   <div id="form">
@@ -96,14 +93,23 @@ customElements.define('my-messages-app',
       // TODO: Maybee you need to define some default values here
       // IndexedDB
       this.request = indexedDB.open('mydatabase', 1)
-      this.request.onerror = function(event) {
+      /**
+       * Called by the browser engine when an attribute changes.
+       *
+       * @param {object} event the event.
+       */
+      this.request.onerror = function (event) {
         console.error(event)
-      };
-      this.request.onupgradeneeded = function(event) {
+      }
+      /**
+       * Called by the browser engine when an attribute changes.
+       *
+       * @param {object} event the event.
+       */
+      this.request.onupgradeneeded = function (event) {
         const db = event.target.result
-      
         // the ObjectStore
-        const objectStore = db.createObjectStore('messages')
+        db.createObjectStore('messages')
       }
     }
 
@@ -171,7 +177,7 @@ customElements.define('my-messages-app',
         const objectStore = transaction.objectStore('messages')
         // Add message to IndexedDB
         if (msg.username !== 'The Server') {
-        objectStore.add({ name: msg.username, message: msg.data, date: d }, d)
+          objectStore.add({ name: msg.username, message: msg.data, date: d }, d)
         }
       }
     }

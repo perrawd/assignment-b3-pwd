@@ -17,7 +17,7 @@ template.innerHTML = `
       display: block;
       background-color:rgba(0, 0, 0, 0.9);
       color: #ffffff;
-      width:50%;
+      width:500px;
       height:60px;
       border: 3px solid #000000;
       border-radius: 10px;

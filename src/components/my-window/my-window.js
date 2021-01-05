@@ -8,6 +8,8 @@
  */
 import '../my-about-app/'
 import '../my-messages-app/'
+import '../my-memory-game/my-memory-game/'
+
 /**
  * Define template.
  */
@@ -26,7 +28,6 @@ template.innerHTML = `
       /*
       border-top: 25px solid red;
       */
-      
     }
     #close {
       width: 18px;
@@ -41,9 +42,12 @@ template.innerHTML = `
     #close:hover {
       cursor: default;
     }
+    img {
+      
+    }
   </style>
   <div part="window" id="window">
-  <div id="close">X</div>
+  <div id="close"></div>
   </div>
   
 `
@@ -70,8 +74,15 @@ customElements.define('my-window',
       // Get the p-element in which we add the text.
       this._windowBar = this.shadowRoot.querySelector('#window')
       this._closeButton = this.shadowRoot.querySelector('#close')
-      // TODO: Maybee you need to define some default values here
-      // this.path = new URL('./img/', this.pathToModule)
+      // Close button
+      this.pathToModule = import.meta.url
+      this.path = new URL('./img/', this.pathToModule)
+      console.log(this.path)
+      const img = document.createElement('img')
+      img.setAttribute('src', `${this.path}close.png`)
+      img.setAttribute('height', '18px')
+      img.setAttribute('width', '18px')
+      this._closeButton.appendChild(img)
     }
 
     /**
@@ -165,7 +176,7 @@ customElements.define('my-window',
        * @param {string} event of the attribute.
        */
       function dragMouseDown (event) {
-        that.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => app.style.zIndex = Number(app.style.zIndex) - 1)
+        that.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => (app.style.zIndex = Number(app.style.zIndex) - 1))
         that.style.zIndex = '200'
         event = event || window.event
         event.preventDefault()
@@ -187,26 +198,26 @@ customElements.define('my-window',
         event.preventDefault()
         if (that.getBoundingClientRect().y <= 0) {
           that.style.top = '1px'
-          closeDragElement ()
-      } else if (that.getBoundingClientRect().x <= 0) {
-        that.style.left = '1px'
-        closeDragElement ()
-    } else if (that.getBoundingClientRect().right >= document.documentElement.clientWidth) {
-      that.style.left = (document.documentElement.clientWidth - that.offsetWidth - 1) + 'px'
-      closeDragElement ()
-  } else if (that.getBoundingClientRect().bottom >= document.documentElement.clientHeight) {
-    that.style.top = (document.documentElement.clientHeight - that.offsetHeight - 1) + 'px'
-    closeDragElement ()
-}else {
-      // calculate the new cursor position:
-      pos1 = pos3 - event.clientX
-      pos2 = pos4 - event.clientY
-      pos3 = event.clientX
-      pos4 = event.clientY
-      // set the element's new position:
-      that.style.top = (that.offsetTop - pos2) + 'px'
-      that.style.left = (that.offsetLeft - pos1) + 'px'
-      }
+          closeDragElement()
+        } else if (that.getBoundingClientRect().x <= 0) {
+          that.style.left = '1px'
+          closeDragElement()
+        } else if (that.getBoundingClientRect().right >= document.documentElement.clientWidth) {
+          that.style.left = (document.documentElement.clientWidth - that.offsetWidth - 1) + 'px'
+          closeDragElement()
+        } else if (that.getBoundingClientRect().bottom >= document.documentElement.clientHeight) {
+          that.style.top = (document.documentElement.clientHeight - that.offsetHeight - 1) + 'px'
+          closeDragElement()
+        } else {
+          // calculate the new cursor position:
+          pos1 = pos3 - event.clientX
+          pos2 = pos4 - event.clientY
+          pos3 = event.clientX
+          pos4 = event.clientY
+          // set the element's new position:
+          that.style.top = (that.offsetTop - pos2) + 'px'
+          that.style.left = (that.offsetLeft - pos1) + 'px'
+        }
       }
 
       /**

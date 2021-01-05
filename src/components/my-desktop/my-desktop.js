@@ -10,6 +10,7 @@ import '../my-dock/'
 import '../my-about-app/'
 import '../my-window/'
 import '../my-messages-app/'
+import '../my-memory-game/my-memory-game/'
 /**
  * Define template.
  */
@@ -44,6 +45,7 @@ template.innerHTML = `
 <my-dock></my-dock>
   <p part="text">hello</p>
   <my-window app="my-about-app"></my-window>
+  <my-window app="my-memory-game"></my-window>
 `
 
 /**
