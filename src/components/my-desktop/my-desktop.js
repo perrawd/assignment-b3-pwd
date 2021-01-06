@@ -11,6 +11,7 @@ import '../my-about-app/'
 import '../my-window/'
 import '../my-messages-app/'
 import '../my-memory-game/my-memory-game/'
+import '../my-desktop-bar/'
 /**
  * Define template.
  */
@@ -18,7 +19,9 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
+      /*
       padding: 1px;
+      */
       display: inline-block;
       width: 100%;
       height: 100%;
@@ -42,10 +45,8 @@ template.innerHTML = `
       left: 0;
     }
   </style>
+<my-desktop-bar></my-desktop-bar>
 <my-dock></my-dock>
-  <p part="text">hello</p>
-  <my-window app="my-about-app"></my-window>
-  <my-window app="my-memory-game"></my-window>
 `
 
 /**
@@ -72,7 +73,6 @@ customElements.define('my-desktop',
 
       // TODO: Maybee you need to define some default values here
       this.window = this.shadowRoot.querySelector('my-window')
-      this.windowHeader = this.shadowRoot.querySelector('my-window').shadowRoot.querySelector('#window')
       this.chat = this.shadowRoot.querySelector('my-messages-app')
     }
 

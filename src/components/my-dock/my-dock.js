@@ -27,7 +27,7 @@ template.innerHTML = `
       left: 0;
       right: 0;
       text-align: center;
-      z-index: 100;
+      z-index: 1000;
     }
     #icons {
       max-height: 55px;
@@ -38,7 +38,7 @@ template.innerHTML = `
 
     img:hover {
       transition: transform .2s;
-      transform: scale(1.3);
+      transform: scale(1.1);
     }
   </style>
 <div id="icons"><div>

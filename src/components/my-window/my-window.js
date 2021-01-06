@@ -22,7 +22,9 @@ template.innerHTML = `
       background: rgba(000, 000, 000, 0.85); 
       border: 3px solid rgba(000, 000, 000, 0.85);
       border-radius: 7px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      top: 30px;
+      left: 1px;
     }
     #window {
       /*
@@ -155,8 +157,9 @@ customElements.define('my-window',
     // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
 
     /**
-     * Makes windows draggable across dekstop.
-     * Code inspired by https://www.w3schools.com/howto/howto_js_draggable.asp.
+     * Makes windows draggable across dekstop within viewport.
+     * Code for draggable windows inspired by https://www.w3schools.com/howto/howto_js_draggable.asp.
+     * Viewport code by me.
      *
      * @param {string} window of the attribute.
      */
