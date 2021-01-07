@@ -79,8 +79,7 @@ customElements.define('my-desktop-bar',
      */
     clock () {
       let currentTime = new Date()
-      const currentDate = currentTime.toLocaleString('sv-SE').slice(0, 10)
-      console.log(currentDate)
+      // const currentDate = currentTime.toLocaleString('sv-SE').slice(0, 10)
       currentTime = currentTime.toLocaleString('sv-SE').slice(11, 16)
       this._textElement.textContent = currentTime
     }

@@ -4,7 +4,7 @@
  * @author Johan Leitet <johan.leitet@lnu.se>
  * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
- * @version 2.0.0
+ * @version 1.0.0
  */
 
 // import { io } from 'socket.io-client'
@@ -20,12 +20,12 @@ template.innerHTML = `
     width: auto;
     height: auto;
     display: grid;
-    grid-template-columns: 150px auto auto auto;
-    grid-template-rows: 360px 100px;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: 25px 360px 100px;
     grid-template-areas:
-        "nav  main   main  main"
-        "nav  form form form";
-
+        "header header header"
+        "main   main   main"
+        "form   form   form";
     }
     #info {
       grid-area: info;
@@ -33,8 +33,10 @@ template.innerHTML = `
       padding: 5px;
     }
     header {
-      background-color: #350d36;
       grid-area: header;
+      background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      border-bottom: 1px solid #7e7e7e;
+      text-align: center;
     }
     nav {
       background-color: #3F0E40;
@@ -50,18 +52,52 @@ template.innerHTML = `
       max-width: 500px;
     }
     #form {
-      background-color: #ffffff;
       grid-area: form;
+      display: grid;
+      background-color: #EEEEEE;
       padding: 5px;
+      border-top: 1px solid #7e7e7e;
+      grid-template-columns: auto auto auto;
+      grid-template-areas:
+        "textform textform buttons"
+    }
+    #textarea {
+      grid-area: textform;
+    }
+    #textinput {
+      outline: none;
+      resize: none;
+      white-space: nowrap;
+      border-radius: 5px;
+    }
+    #buttons {
+      grid-area: buttons;
+    }
+    #btn {
+      box-sizing: border-box;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 7px 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 10px;
+      margin: 0;
+      border-radius: 5px;
     }
   </style>
-  <nav>#wp20</nav>
+  <header>#wp20</header>
   <main>MAIN</main>
   <div id="form">
-  <form id="textform">
-    <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande till oss här" rows="5" cols="50"></textarea>
-    <button type="submit">SEND</button>
-  </form>
+    <div id="textarea">
+      <form id="textform">
+        <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande till oss här" rows="5" cols="50" required></textarea>
+      </form>
+    </div>
+    <div id="buttons">
+      <button type="submit" id="btn" form="textform">SEND</button>
+    </div>
   </div>
 `
 
@@ -121,22 +157,8 @@ customElements.define('my-messages-app',
        * @param {object} event the event.
        */
       this.request.onsuccess = function (event) {
-        const db = event.target.result
-        const transaction = db.transaction(['messages'])
-        const objectStore = transaction.objectStore('messages')
-        const result = objectStore.getAll()
-        /**
-         * Get messages from database.
-         *
-         * @param {object} event the event.
-         */
-        result.onsuccess = function (event) {
-          console.log(this)
-          const result = event.target.result
-          result.forEach((message) => {
-            this.addMessage(message)
-          })
-        }.bind(this)
+        this.getMessages(event)
+        this.getUsername(event)
       }.bind(this)
     }
 
@@ -199,6 +221,8 @@ customElements.define('my-messages-app',
         d = d.toLocaleString('sv-SE')
         senderText.textContent = `${msg.username}: ${msg.data} (${d})`
         this._main.appendChild(senderText)
+        // Scroll bottom
+        this._main.scrollTop = this._main.scrollHeight
         // Open IndexedDB transaction
         const db = this.request.result
         const transaction = db.transaction(['messages'], 'readwrite')
@@ -226,7 +250,7 @@ customElements.define('my-messages-app',
       const msg = {
         type: 'message',
         data: this._textInput.value,
-        username: 'Moi',
+        username: this._userName,
         channel: 'my, not so secret, channel',
         key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
@@ -235,10 +259,51 @@ customElements.define('my-messages-app',
     }
 
     /**
-     * Wipes the board clean and resets the letter counter.
+     * Get previous messages from IndexedDB.
+     *
+     * @param {object} event the event.
      */
-    getMessages () {
+    getMessages (event) {
+      const db = event.target.result
+      const transaction = db.transaction(['messages'])
+      const objectStore = transaction.objectStore('messages')
+      const result = objectStore.getAll()
+      /**
+       * Get messages from database.
+       *
+       * @param {object} event the event.
+       */
+      result.onsuccess = function (event) {
+        console.log(this)
+        const result = event.target.result
+        result.forEach((message) => {
+          this.addMessage(message)
+        })
+      }.bind(this)
+    }
 
+    /**
+     * Get username from IndexedDB.
+     *
+     * @param {object} event the event.
+     */
+    getUsername (event) {
+      const db = event.target.result
+      const transaction = db.transaction(['username'])
+      const objectStore = transaction.objectStore('username')
+      const result = objectStore.getAll()
+      /**
+       * Get username from database.
+       *
+       * @param {object} event the event.
+       */
+      result.onsuccess = function (event) {
+        if (!event.target.result.length) {
+          this.addUsername()
+        } else {
+          this._userName = event.target.result[0].name
+        }
+      }.bind(this)
     }
 
     /**
@@ -250,6 +315,19 @@ customElements.define('my-messages-app',
       const senderText = document.createElement('p')
       senderText.textContent = `${msg.name}: ${msg.message} (${msg.date})`
       this._main.appendChild(senderText)
+    }
+
+    /**
+     * Add username if there is none in IndexedDB.
+     *
+     */
+    addUsername () {
+      const db = this.request.result
+      const transaction = db.transaction(['username'], 'readwrite')
+      const objectStore = transaction.objectStore('username')
+      const username = prompt('Please input your username')
+      objectStore.add({ name: username }, 'username1')
+      this._userName = objectStore.get(0).name
     }
   }
 )
