@@ -47,6 +47,7 @@
     }
   },
   "dependencies": {
+    "idb": "^6.0.0",
     "socket.io": "^3.0.4",
     "socket.io-client": "^3.0.4"
   }

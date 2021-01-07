@@ -8,6 +8,7 @@
  */
 
 // import { io } from 'socket.io-client'
+// import { openDB, deleteDB, wrap, unwrap } from 'idb'
 
 /**
  * Define template.
@@ -46,6 +47,7 @@ template.innerHTML = `
       grid-area: main;
       padding: 5px;
       overflow: auto;
+      max-width: 500px;
     }
     #form {
       background-color: #ffffff;
@@ -89,12 +91,13 @@ customElements.define('my-messages-app',
       this._main = this.shadowRoot.querySelector('main')
       this._textForm = this.shadowRoot.querySelector('#textform')
       this._textInput = this.shadowRoot.querySelector('#textinput')
+      this.arr = []
 
       // TODO: Maybee you need to define some default values here
       // IndexedDB
       this.request = indexedDB.open('mydatabase', 1)
       /**
-       * Called by the browser engine when an attribute changes.
+       * Called if there was an error opening the database.
        *
        * @param {object} event the event.
        */
@@ -102,7 +105,7 @@ customElements.define('my-messages-app',
         console.error(event)
       }
       /**
-       * Called by the browser engine when an attribute changes.
+       * Called if database upgrade is needed.
        *
        * @param {object} event the event.
        */
@@ -110,7 +113,31 @@ customElements.define('my-messages-app',
         const db = event.target.result
         // the ObjectStore
         db.createObjectStore('messages')
+        db.createObjectStore('username')
       }
+      /**
+       * Called when database onsucess. Get messages.
+       *
+       * @param {object} event the event.
+       */
+      this.request.onsuccess = function (event) {
+        const db = event.target.result
+        const transaction = db.transaction(['messages'])
+        const objectStore = transaction.objectStore('messages')
+        const result = objectStore.getAll()
+        /**
+         * Get messages from database.
+         *
+         * @param {object} event the event.
+         */
+        result.onsuccess = function (event) {
+          console.log(this)
+          const result = event.target.result
+          result.forEach((message) => {
+            this.addMessage(message)
+          })
+        }.bind(this)
+      }.bind(this)
     }
 
     /**
@@ -141,6 +168,7 @@ customElements.define('my-messages-app',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      console.log(this.arr)
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       this._textForm.addEventListener('submit', (e) => {
@@ -159,9 +187,9 @@ customElements.define('my-messages-app',
       }
 
       /**
-       * Called by the browser engine when an attribute changes.
+       * On message received from websocket.
        *
-       * @param {any} event the new attribute value.
+       * @param {any} event the event.
        */
       this.socket.onmessage = (event) => {
         console.log(event.data)
@@ -198,7 +226,7 @@ customElements.define('my-messages-app',
       const msg = {
         type: 'message',
         data: this._textInput.value,
-        username: 'MyFancyUsername',
+        username: 'Moi',
         channel: 'my, not so secret, channel',
         key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
@@ -209,9 +237,19 @@ customElements.define('my-messages-app',
     /**
      * Wipes the board clean and resets the letter counter.
      */
-    clear () {
-      // TODO: Implement the method
+    getMessages () {
+
     }
-    // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
+
+    /**
+     * Wipes the board clean and resets the letter counter.
+     *
+     * @param {object} msg of the attribute.
+     */
+    addMessage (msg) {
+      const senderText = document.createElement('p')
+      senderText.textContent = `${msg.name}: ${msg.message} (${msg.date})`
+      this._main.appendChild(senderText)
+    }
   }
 )
