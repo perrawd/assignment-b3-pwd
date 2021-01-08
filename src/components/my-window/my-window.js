@@ -4,7 +4,7 @@
  * @author Johan Leitet <johan.leitet@lnu.se>
  * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
- * @version 2.0.0
+ * @version 1.0.0
  */
 import '../my-about-app/'
 import '../my-messages-app/'
@@ -133,6 +133,83 @@ customElements.define('my-window',
     }
 
     /**
+     * Makes windows draggable across dekstop within viewport.
+     * Code for draggable windows inspired by https://www.w3schools.com/howto/howto_js_draggable.asp.
+     * Viewport code by me.
+     *
+     * @param {string} window of the attribute.
+     */
+    dragWindow (window) {
+      // const that = this
+      let pos1 = 0
+      let pos2 = 0
+      let pos3 = 0
+      let pos4 = 0
+
+      /**
+       * On mousedown.
+       *
+       * @param {string} event of the attribute.
+       */
+      const dragMouseDown = (event) => {
+        this.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => (app.style.zIndex = Number(app.style.zIndex) - 1))
+        this.style.zIndex = '200'
+        event = event || window.event
+        event.preventDefault()
+        // get the mouse cursor position at startup:
+        pos3 = event.clientX
+        pos4 = event.clientY
+        document.onmouseup = closeDragElement
+        // call a function whenever the cursor moves:
+        document.onmousemove = windowDrag
+      }
+
+      /**
+       * Moves the window.
+       *
+       * @param {string} event The event.
+       */
+      const windowDrag = (event) => {
+        event = event || window.event
+        event.preventDefault()
+        if (this.getBoundingClientRect().y <= 0) {
+          this.style.top = '1px'
+          closeDragElement()
+        } else if (this.getBoundingClientRect().x <= 0) {
+          this.style.left = '1px'
+          closeDragElement()
+        } else if (this.getBoundingClientRect().right >= document.documentElement.clientWidth) {
+          this.style.left = (document.documentElement.clientWidth - this.offsetWidth - 1) + 'px'
+          closeDragElement()
+        } else if (this.getBoundingClientRect().bottom >= document.documentElement.clientHeight) {
+          this.style.top = (document.documentElement.clientHeight - this.offsetHeight - 1) + 'px'
+          closeDragElement()
+        } else {
+          // calculate the new cursor position:
+          pos1 = pos3 - event.clientX
+          pos2 = pos4 - event.clientY
+          pos3 = event.clientX
+          pos4 = event.clientY
+          // set the element's new position:
+          this.style.top = (this.offsetTop - pos2) + 'px'
+          this.style.left = (this.offsetLeft - pos1) + 'px'
+        }
+      }
+
+      /**
+       * Stop moving when mouse button is released.
+       *
+       */
+      function closeDragElement () {
+        document.onmouseup = null
+        document.onmousemove = null
+      }
+
+      // The window bar of which
+      this._windowBar.onmousedown = dragMouseDown
+    }
+
+    /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
@@ -155,82 +232,5 @@ customElements.define('my-window',
     }
 
     // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
-
-    /**
-     * Makes windows draggable across dekstop within viewport.
-     * Code for draggable windows inspired by https://www.w3schools.com/howto/howto_js_draggable.asp.
-     * Viewport code by me.
-     *
-     * @param {string} window of the attribute.
-     */
-    dragWindow (window) {
-      const that = this
-      let pos1 = 0
-      let pos2 = 0
-      let pos3 = 0
-      let pos4 = 0
-
-      // The window bar of which
-      this._windowBar.onmousedown = dragMouseDown
-
-      /**
-       * On mousedown.
-       *
-       * @param {string} event of the attribute.
-       */
-      function dragMouseDown (event) {
-        that.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => (app.style.zIndex = Number(app.style.zIndex) - 1))
-        that.style.zIndex = '200'
-        event = event || window.event
-        event.preventDefault()
-        // get the mouse cursor position at startup:
-        pos3 = event.clientX
-        pos4 = event.clientY
-        document.onmouseup = closeDragElement
-        // call a function whenever the cursor moves:
-        document.onmousemove = windowDrag
-      }
-
-      /**
-       * Moves the window.
-       *
-       * @param {string} event The event.
-       */
-      function windowDrag (event) {
-        event = event || window.event
-        event.preventDefault()
-        if (that.getBoundingClientRect().y <= 0) {
-          that.style.top = '1px'
-          closeDragElement()
-        } else if (that.getBoundingClientRect().x <= 0) {
-          that.style.left = '1px'
-          closeDragElement()
-        } else if (that.getBoundingClientRect().right >= document.documentElement.clientWidth) {
-          that.style.left = (document.documentElement.clientWidth - that.offsetWidth - 1) + 'px'
-          closeDragElement()
-        } else if (that.getBoundingClientRect().bottom >= document.documentElement.clientHeight) {
-          that.style.top = (document.documentElement.clientHeight - that.offsetHeight - 1) + 'px'
-          closeDragElement()
-        } else {
-          // calculate the new cursor position:
-          pos1 = pos3 - event.clientX
-          pos2 = pos4 - event.clientY
-          pos3 = event.clientX
-          pos4 = event.clientY
-          // set the element's new position:
-          that.style.top = (that.offsetTop - pos2) + 'px'
-          that.style.left = (that.offsetLeft - pos1) + 'px'
-        }
-      }
-
-      /**
-       * Stop moving when mouse button is released.
-       *
-       */
-      function closeDragElement () {
-        document.onmouseup = null
-        document.onmousemove = null
-      }
-    }
   }
 )

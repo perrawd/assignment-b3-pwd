@@ -105,6 +105,9 @@ template.innerHTML = `
     .tooltip:not(.shown) {
           display: none;
     }
+    .mybubble {
+      
+    }
   </style>
   <header>#wp20</header>
   <main>MAIN</main>
