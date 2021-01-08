@@ -127,7 +127,6 @@ customElements.define('my-messages-app',
       this._main = this.shadowRoot.querySelector('main')
       this._textForm = this.shadowRoot.querySelector('#textform')
       this._textInput = this.shadowRoot.querySelector('#textinput')
-      this.arr = []
 
       // TODO: Maybee you need to define some default values here
       // IndexedDB
@@ -137,7 +136,7 @@ customElements.define('my-messages-app',
        *
        * @param {object} event the event.
        */
-      this.request.onerror = function (event) {
+      this.request.onerror = (event) => {
         console.error(event)
       }
       /**
@@ -145,7 +144,7 @@ customElements.define('my-messages-app',
        *
        * @param {object} event the event.
        */
-      this.request.onupgradeneeded = function (event) {
+      this.request.onupgradeneeded = (event) => {
         const db = event.target.result
         // the ObjectStore
         db.createObjectStore('messages')
@@ -156,10 +155,10 @@ customElements.define('my-messages-app',
        *
        * @param {object} event the event.
        */
-      this.request.onsuccess = function (event) {
-        this.getMessages(event)
-        this.getUsername(event)
-      }.bind(this)
+      this.request.onsuccess = (event) => {
+        this._getMessages(event)
+        this._getUsername(event)
+      }
     }
 
     /**
@@ -190,12 +189,11 @@ customElements.define('my-messages-app',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      console.log(this.arr)
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       this._textForm.addEventListener('submit', (e) => {
         e.preventDefault()
-        this.sendText()
+        this._sendText()
         this._textInput.value = ''
       })
 
@@ -243,10 +241,10 @@ customElements.define('my-messages-app',
     }
 
     /**
-     * Stops the writing.
+     * Send message to socket.
      *
      */
-    sendText () {
+    _sendText () {
       const msg = {
         type: 'message',
         data: this._textInput.value,
@@ -263,7 +261,7 @@ customElements.define('my-messages-app',
      *
      * @param {object} event the event.
      */
-    getMessages (event) {
+    _getMessages (event) {
       const db = event.target.result
       const transaction = db.transaction(['messages'])
       const objectStore = transaction.objectStore('messages')
@@ -273,13 +271,24 @@ customElements.define('my-messages-app',
        *
        * @param {object} event the event.
        */
-      result.onsuccess = function (event) {
+      result.onsuccess = (event) => {
         console.log(this)
         const result = event.target.result
         result.forEach((message) => {
-          this.addMessage(message)
+          this._addMessage(message)
         })
-      }.bind(this)
+      }
+    }
+
+    /**
+     * Add message to Chat UI.
+     *
+     * @param {object} msg of the attribute.
+     */
+    _addMessage (msg) {
+      const senderText = document.createElement('p')
+      senderText.textContent = `${msg.name}: ${msg.message} (${msg.date})`
+      this._main.appendChild(senderText)
     }
 
     /**
@@ -287,7 +296,7 @@ customElements.define('my-messages-app',
      *
      * @param {object} event the event.
      */
-    getUsername (event) {
+    _getUsername (event) {
       const db = event.target.result
       const transaction = db.transaction(['username'])
       const objectStore = transaction.objectStore('username')
@@ -297,37 +306,34 @@ customElements.define('my-messages-app',
        *
        * @param {object} event the event.
        */
-      result.onsuccess = function (event) {
+      result.onsuccess = (event) => {
         if (!event.target.result.length) {
-          this.addUsername()
+          this._addUsername()
         } else {
           this._userName = event.target.result[0].name
         }
-      }.bind(this)
-    }
-
-    /**
-     * Wipes the board clean and resets the letter counter.
-     *
-     * @param {object} msg of the attribute.
-     */
-    addMessage (msg) {
-      const senderText = document.createElement('p')
-      senderText.textContent = `${msg.name}: ${msg.message} (${msg.date})`
-      this._main.appendChild(senderText)
+      }
     }
 
     /**
      * Add username if there is none in IndexedDB.
      *
      */
-    addUsername () {
+    _addUsername () {
       const db = this.request.result
       const transaction = db.transaction(['username'], 'readwrite')
       const objectStore = transaction.objectStore('username')
       const username = prompt('Please input your username')
       objectStore.add({ name: username }, 'username1')
-      this._userName = objectStore.get(0).name
+      const result = objectStore.get('username1')
+      /**
+       * Set username from database.
+       *
+       * @param {object} event the event.
+       */
+      result.onsuccess = (event) => {
+        this._userName = event.target.result.name
+      }
     }
   }
 )
