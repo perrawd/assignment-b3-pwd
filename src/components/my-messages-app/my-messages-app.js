@@ -9,6 +9,9 @@
 
 // import { io } from 'socket.io-client'
 // import { openDB, deleteDB, wrap, unwrap } from 'idb'
+// import { EmojiButton } from '@joeattardi/emoji-button'
+import 'emoji-picker-element'
+import { createPopper } from '@popperjs/core'
 
 /**
  * Define template.
@@ -83,8 +86,24 @@ template.innerHTML = `
       text-decoration: none;
       display: inline-block;
       font-size: 10px;
-      margin: 0;
       border-radius: 5px;
+      margin: 5px;
+    }
+    #emojibtn {
+      box-sizing: border-box;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 7px 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 10px;
+      border-radius: 5px;
+      margin: 5px;
+    }
+    .tooltip:not(.shown) {
+          display: none;
     }
   </style>
   <header>#wp20</header>
@@ -97,6 +116,11 @@ template.innerHTML = `
     </div>
     <div id="buttons">
       <button type="submit" id="btn" form="textform">SEND</button>
+      <br>
+      <button id="emojibtn">😀</button>
+      <div class="tooltip" role="tooltip">
+        <emoji-picker></emoji-picker>
+      </div>
     </div>
   </div>
 `
@@ -127,6 +151,8 @@ customElements.define('my-messages-app',
       this._main = this.shadowRoot.querySelector('main')
       this._textForm = this.shadowRoot.querySelector('#textform')
       this._textInput = this.shadowRoot.querySelector('#textinput')
+      this._emojiButton = this.shadowRoot.querySelector('#emojibtn')
+      this._emojiPicker = this.shadowRoot.querySelector('.tooltip')
 
       // TODO: Maybee you need to define some default values here
       // IndexedDB
@@ -189,7 +215,18 @@ customElements.define('my-messages-app',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
+      // Emoji picker
+      createPopper(this._emojiButton, this._emojiPicker, {
+        placement: 'right-start'
+      })
+      this._emojiButton.addEventListener('click', () => {
+        this._emojiPicker.classList.toggle('shown')
+      })
+      this.shadowRoot.querySelector('emoji-picker').addEventListener('emoji-click', (event) => {
+        console.log(event.detail)
+        this._textInput.value += event.detail.unicode
+      })
+
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       this._textForm.addEventListener('submit', (e) => {
         e.preventDefault()
@@ -212,7 +249,6 @@ customElements.define('my-messages-app',
        * @param {any} event the event.
        */
       this.socket.onmessage = (event) => {
-        console.log(event.data)
         const msg = JSON.parse(event.data)
         const senderText = document.createElement('p')
         let d = new Date()
@@ -230,14 +266,6 @@ customElements.define('my-messages-app',
           objectStore.add({ name: msg.username, message: msg.data, date: d }, d)
         }
       }
-    }
-
-    /**
-     * Called after the element has been removed from the DOM.
-     */
-    disconnectedCallback () {
-      // TODO: Remove your eventlisterners here.
-      this.socket.close()
     }
 
     /**
@@ -272,7 +300,6 @@ customElements.define('my-messages-app',
        * @param {object} event the event.
        */
       result.onsuccess = (event) => {
-        console.log(this)
         const result = event.target.result
         result.forEach((message) => {
           this._addMessage(message)
@@ -281,7 +308,7 @@ customElements.define('my-messages-app',
     }
 
     /**
-     * Add message to Chat UI.
+     * Add message to Chat UI from indexedDB.
      *
      * @param {object} msg of the attribute.
      */
@@ -334,6 +361,14 @@ customElements.define('my-messages-app',
       result.onsuccess = (event) => {
         this._userName = event.target.result.name
       }
+    }
+
+    /**
+     * Called after the element has been removed from the DOM.
+     */
+    disconnectedCallback () {
+      // TODO: Remove your eventlisterners here.
+      this.socket.close()
     }
   }
 )
