@@ -1,5 +1,5 @@
 /**
- * The bart-board web component module.
+ * The my-messages-app web component module.
  *
  * @author Johan Leitet <johan.leitet@lnu.se>
  * @author Mats Loock <mats.loock@lnu.se>
@@ -188,30 +188,6 @@ customElements.define('my-messages-app',
     }
 
     /**
-     * Watches the attributes "text" and "speed" for changes on the element.
-     *
-     * @returns {Array} The observed attributes.
-     *
-     */
-    static get observedAttributes () {
-      // TODO: Add observer for text and speed.
-      return ['text', 'speed']
-    }
-
-    /**
-     * Called by the browser engine when an attribute changes.
-     *
-     * @param {string} name of the attribute.
-     * @param {any} oldValue the old attribute value.
-     * @param {any} newValue the new attribute value.
-     */
-    attributeChangedCallback (name, oldValue, newValue) {
-      // TODO: Add your code for handling updates and creation of the observed attributes.
-      if (name === 'text') { this.text = newValue + ' ' }
-      if (name === 'speed') { this.speed = newValue }
-    }
-
-    /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
@@ -231,7 +207,13 @@ customElements.define('my-messages-app',
       this._textForm.addEventListener('submit', (e) => {
         e.preventDefault()
         this._sendText()
-        this._textInput.value = ''
+      })
+      // Enter submit
+      this._textInput.addEventListener('keydown', (e) => {
+        console.log(e.keyCode)
+        if (e.keyCode === 13) {
+          this._sendText()
+        }
       })
 
       /**
@@ -282,6 +264,7 @@ customElements.define('my-messages-app',
       }
       // Send the message
       this.socket.send(JSON.stringify(msg))
+      this._textInput.value = ''
     }
 
     /**
@@ -361,6 +344,30 @@ customElements.define('my-messages-app',
       result.onsuccess = (event) => {
         this._userName = event.target.result.name
       }
+    }
+
+    /**
+     * Watches the attributes "text" and "speed" for changes on the element.
+     *
+     * @returns {Array} The observed attributes.
+     *
+     */
+    static get observedAttributes () {
+      // TODO: Add observer for text and speed.
+      return ['text', 'speed']
+    }
+
+    /**
+     * Called by the browser engine when an attribute changes.
+     *
+     * @param {string} name of the attribute.
+     * @param {any} oldValue the old attribute value.
+     * @param {any} newValue the new attribute value.
+     */
+    attributeChangedCallback (name, oldValue, newValue) {
+      // TODO: Add your code for handling updates and creation of the observed attributes.
+      if (name === 'text') { this.text = newValue + ' ' }
+      if (name === 'speed') { this.speed = newValue }
     }
 
     /**
