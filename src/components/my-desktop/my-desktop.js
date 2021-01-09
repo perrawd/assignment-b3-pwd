@@ -7,11 +7,13 @@
  * @version 2.0.0
  */
 import '../my-dock/'
-import '../my-about-app/'
+import '../my-desktop-bar/'
 import '../my-window/'
 import '../my-messages-app/'
 import '../my-memory-game/my-memory-game/'
-import '../my-desktop-bar/'
+import '../my-camera-app/'
+import '../my-about-app/'
+
 /**
  * Define template.
  */

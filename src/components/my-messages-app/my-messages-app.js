@@ -114,7 +114,7 @@ template.innerHTML = `
   <div id="form">
     <div id="textarea">
       <form id="textform">
-        <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande till oss här" rows="5" cols="50" required></textarea>
+        <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande till oss här" rows="5" cols="50" wrap="hard" required></textarea>
       </form>
     </div>
     <div id="buttons">

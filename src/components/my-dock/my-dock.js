@@ -102,14 +102,22 @@ customElements.define('my-dock',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
+      // Chat app icon
       this.chat = document.createElement('img')
       this.chat.setAttribute('src', `${this.path}chat.png`)
       this.chat.setAttribute('title', 'Chat app')
       this.icons.appendChild(this.chat)
+      // Memory game icon
       this.memory = document.createElement('img')
       this.memory.setAttribute('src', `${this.path}memorygame.png`)
       this.memory.setAttribute('title', 'Memory game app')
       this.icons.appendChild(this.memory)
+      // Memory game icon
+      this.cam = document.createElement('img')
+      this.cam.setAttribute('src', `${this.path}camera.png`)
+      this.cam.setAttribute('title', 'Camera app')
+      this.icons.appendChild(this.cam)
+      // Dispatch events to start app
       this.chat.addEventListener('click', (e) => {
         this.dispatchEvent(new CustomEvent('openApp', {
           bubbles: true,
@@ -122,6 +130,13 @@ customElements.define('my-dock',
           bubbles: true,
           composed: true,
           detail: { name: 'my-memory-game' }
+        }))
+      })
+      this.cam.addEventListener('click', (e) => {
+        this.dispatchEvent(new CustomEvent('openApp', {
+          bubbles: true,
+          composed: true,
+          detail: { name: 'my-camera-app' }
         }))
       })
     }
