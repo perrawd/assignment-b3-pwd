@@ -86,16 +86,17 @@ customElements.define('my-camera-app',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      // TODO: Maybee you need to define some default values here
+      this.pathToModule = import.meta.url
+      this.path = new URL('./', this.pathToModule)
+
       // Get the p-element in which we add the text.
       this._textElement = this.shadowRoot.querySelector('p')
       this._constrols = this.shadowRoot.querySelector('#controls')
       this._video = this.shadowRoot.querySelector('#video')
       this._canvas = this.shadowRoot.querySelector('#canvas')
       this._constrols = this.shadowRoot.querySelector('#controls')
-
-      // TODO: Maybee you need to define some default values here
-      this.pathToModule = import.meta.url
-      this.path = new URL('./images/', this.pathToModule)
+      this._shutterSound = new Audio(`${this.path}audio/camera-shutter.mp3`)
     }
 
     /**
@@ -103,7 +104,7 @@ customElements.define('my-camera-app',
      */
     connectedCallback () {
       this.shutter = document.createElement('img')
-      this.shutter.setAttribute('src', `${this.path}shutter_button.svg`)
+      this.shutter.setAttribute('src', `${this.path}images/shutter_button.svg`)
       this.shutter.setAttribute('title', 'Shutter button')
       this.shutter.setAttribute('id', 'shutter')
       this._constrols.appendChild(this.shutter)
@@ -146,10 +147,8 @@ customElements.define('my-camera-app',
       this._canvas.height = 480
       context.drawImage(this._video, 0, 0, this._canvas.width, this._canvas.height)
       const data = this._canvas.toDataURL('image/png')
-      // add pic
-      const img = document.createElement('img')
-      img.setAttribute('src', data)
-      this.appendChild(img)
+      // play shutter sound
+      this._shutterSound.play()
       // custom event
       this.dispatchEvent(new CustomEvent('photo', {
         bubbles: true,
