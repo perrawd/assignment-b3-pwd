@@ -14,15 +14,32 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      background:#ffffff;
-      padding: 20px;
-    }
-    p {
+      display: grid;
+      grid-template-columns: auto;
+      grid-template-rows: auto 45px;
+      grid-template-areas:
+        "header"
+        "footer";
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
+      background:#ffffff;
+    }
+    img {
+      width: 320px;
+      height: 240px;
+    }
+    #photo {
+      grid-area: header;
+      padding: 12px;
+    }
+    footer {
+      grid-area: footer;
     }
   </style>
   <div id="photo"></div>
+  <footer></footer>
 `
 
 /**
