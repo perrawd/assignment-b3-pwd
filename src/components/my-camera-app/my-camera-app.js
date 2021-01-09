@@ -42,8 +42,8 @@ template.innerHTML = `
       background-color: #000000;
       text-align: center;
       display: flex;
-  justify-content: center;
-  align-items: center;
+      justify-content: center;
+      align-items: center;
     }
     #shutter {
       border: 2px solid #ffffff;
@@ -55,10 +55,14 @@ template.innerHTML = `
       margin: 4px 2px;
       border-radius: 50%;
     }
+    #canvas {
+      display: none;
+    }
   </style>
 
   <header>You're on camera, Smile :)</header>
   <video id="video">Video stream not available.</video>
+  <canvas id="canvas"></canvas>
   <div id="controls">
   </div>
 `
@@ -86,6 +90,7 @@ customElements.define('my-camera-app',
       this._textElement = this.shadowRoot.querySelector('p')
       this._constrols = this.shadowRoot.querySelector('#controls')
       this._video = this.shadowRoot.querySelector('#video')
+      this._canvas = this.shadowRoot.querySelector('#canvas')
       this._constrols = this.shadowRoot.querySelector('#controls')
 
       // TODO: Maybee you need to define some default values here
@@ -105,10 +110,16 @@ customElements.define('my-camera-app',
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
       // Start video
+      console.log(this._video.width)
       this._camera()
       // Camera shutter
       this.shutter.addEventListener('click', () => {
-        alert('click')
+        try {
+          this._takePhoto()
+          console.log('photo taken!')
+        } catch (error) {
+          console.error(error)
+        }
       })
     }
 
@@ -124,6 +135,21 @@ customElements.define('my-camera-app',
         .catch((err) => {
           console.log('An error occurred: ' + err)
         })
+    }
+
+    /**
+     * Called after the element has been removed from the DOM.
+     */
+    _takePhoto () {
+      const context = this._canvas.getContext('2d')
+      this._canvas.width = 640
+      this._canvas.height = 480
+      context.drawImage(this._video, 0, 0, this._canvas.width, this._canvas.height)
+      const data = this._canvas.toDataURL('image/png')
+      // add pic
+      const img = document.createElement('img')
+      img.setAttribute('src', data)
+      this.appendChild(img)
     }
 
     /**
