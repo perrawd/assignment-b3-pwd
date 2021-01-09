@@ -150,6 +150,12 @@ customElements.define('my-camera-app',
       const img = document.createElement('img')
       img.setAttribute('src', data)
       this.appendChild(img)
+      // custom event
+      this.dispatchEvent(new CustomEvent('photo', {
+        bubbles: true,
+        composed: true,
+        detail: { photo: data }
+      }))
     }
 
     /**

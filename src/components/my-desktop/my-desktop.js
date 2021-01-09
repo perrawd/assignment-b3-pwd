@@ -12,6 +12,7 @@ import '../my-window/'
 import '../my-messages-app/'
 import '../my-memory-game/my-memory-game/'
 import '../my-camera-app/'
+import '../my-photo/'
 import '../my-about-app/'
 
 /**
@@ -122,6 +123,12 @@ customElements.define('my-desktop',
         myWindow.setAttribute('app', event.detail.name)
         this.shadowRoot.appendChild(myWindow)
       })
+      this.addEventListener('photo', (event) => {
+        const myWindow = document.createElement('my-window')
+        myWindow.setAttribute('app', 'my-photo')
+        myWindow.shadowRoot.querySelector('my-photo').setAttribute('src', event.detail.photo)
+        this.shadowRoot.appendChild(myWindow)
+      })
     }
 
     /**
@@ -136,8 +143,6 @@ customElements.define('my-desktop',
      */
     clear () {
       // TODO: Implement the method
-      this._textElement.textContent = ''
-      this.i = 0
     }
     // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
   }
