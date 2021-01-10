@@ -104,7 +104,7 @@ customElements.define('my-window',
       // Default z-index
       this.style.zIndex = 100
       // Start dragWindow method for the window.
-      this.dragWindow(this)
+      this._dragWindow(this)
       // Close window.
       this._closeButton.addEventListener('click', (e) => {
         this.dispatchEvent(new CustomEvent('closeApp', {
@@ -122,7 +122,7 @@ customElements.define('my-window',
      *
      * @param {string} window of the attribute.
      */
-    dragWindow (window) {
+    _dragWindow (window) {
       let pos1 = 0
       let pos2 = 0
       let pos3 = 0

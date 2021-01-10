@@ -1,45 +1,56 @@
-# &lt;bart-board&gt;
-A web component used to simulate the intro scene from Simpsons, were Bart is writing on the black board.
+# &lt;my-messages-app&gt;
+A messaging application for course-wide message chat using Web Sockets. 
+The application uses IndexedDB for storing username and messages received. 
 
-## Attributes
+## Usage
 
-### `text`
-A String attribute; that, if specified, contains the text that will be written out, letter by letter, on the black board.
+### Web Socket
+Web Socket connection to the course server is opened upon opening the application.
+When the application is closed or if the component is removed from the DOM, the connection will close.
 
-Default value: `I will never ever skip the line in the task queue again.`
+### Username
+Username is stored in IndexedDB. 
+If the application is opened for the first time or if there is no username stored, the user will be asked to set a username.
 
-### `speed`
-A Number indicating the speed in milliseconds, of which the letters will appear on the screen. 
+### Chat messages
+Chat messages are sent and received through Web Socket. 
+Received messages are stored in IndexedDB (see Chat History below for more information).
 
-Default value: `50`
+## Additional features
+
+### Emoji support
+Supports emoji button to add a emoji to the textarea. 
+Emoji picker is using 'emoji-picker-element' package.
+Popup for the emoji picker is using 'Popper' package.
+
+### Chat history
+Chat messages are stored in IndexedDB with the username, message and datestamp of which when the message was received (exception: Messages from 'The Server' user).
 
 ## Methods
 
-### `clear()`
-A method that when called will clear the text written on the board.
+### `_sendText()`
+Sends message in JSON format to the course server using Web Socket.
 
-Parameters: none
+### `_getMessages(event)`
+Retrieves messages stored in IndexedDB and adds them to the conversations element when the application is started.
 
-Returns: Reference to self.
+Parameters: {object} event The IndexedDB event object.
 
-### `stopWriting()`
-When called, will stop writing of the board.
+### `_addMessage(message)`
+Adds message to the conversations element from a object passed as argument.
 
-Parameters: none
+Parameter: {object} message The message object.
 
-Returns: Reference to self.
+### `_getUsername(event)`
+Retrieves username from IndexedDB if there are any.
+If none is found, run _addUsername() to add one.
 
-## Events
-| Event Name | Fired When |
-|------------|------------|
-| `filled`| The board is filled with text.
+Parameters: {object} event The IndexedDB event object.
 
-## Styling with CSS
-The text (p-element) is styleable using the part `text`
+### `_addUsername(event)`
+Adds username to IndexedDB.
 
 ## Example
 ```html
-   <bart-board text="This is the text that will be written" speed="50"></bart-board>
+   <my-messages-app></my-messages-app>
 ```
-
-![Example of the functions of the bart-board](./.readme/example.gif)

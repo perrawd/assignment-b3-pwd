@@ -1,8 +1,6 @@
 /**
  * The my-messages-app web component module.
  *
- * @author Johan Leitet <johan.leitet@lnu.se>
- * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
  */
@@ -37,7 +35,7 @@ template.innerHTML = `
     }
     header {
       grid-area: header;
-      background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
       border-bottom: 1px solid #7e7e7e;
       text-align: center;
     }
@@ -109,12 +107,12 @@ template.innerHTML = `
       
     }
   </style>
-  <header>#wp20</header>
-  <main>MAIN</main>
+  <header></header>
+  <main></main>
   <div id="form">
     <div id="textarea">
       <form id="textform">
-        <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande till oss här" rows="5" cols="50" wrap="hard" required></textarea>
+        <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande här" rows="5" cols="50" wrap="hard" required></textarea>
       </form>
     </div>
     <div id="buttons">
@@ -133,7 +131,7 @@ template.innerHTML = `
  */
 customElements.define('my-messages-app',
 /**
- * Define custom element.
+ * A new HTMLElement class instance.
  */
   class extends HTMLElement {
     /**
@@ -142,12 +140,11 @@ customElements.define('my-messages-app',
     constructor () {
       super()
 
-      // Attach a shadow DOM tree to this element and
-      // append the template to the shadow root.
+      // Attach a shadow DOM tree to this element and append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      // Socket.IO
+      // Web Socket init.
       this.socket = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
 
       // Get the p-element in which we add the text.
@@ -157,13 +154,12 @@ customElements.define('my-messages-app',
       this._emojiButton = this.shadowRoot.querySelector('#emojibtn')
       this._emojiPicker = this.shadowRoot.querySelector('.tooltip')
 
-      // TODO: Maybee you need to define some default values here
       // IndexedDB
       this.request = indexedDB.open('mydatabase', 1)
       /**
        * Called if there was an error opening the database.
        *
-       * @param {object} event the event.
+       * @param {object} event The event object.
        */
       this.request.onerror = (event) => {
         console.error(event)
@@ -171,7 +167,7 @@ customElements.define('my-messages-app',
       /**
        * Called if database upgrade is needed.
        *
-       * @param {object} event the event.
+       * @param {object} event The event object.
        */
       this.request.onupgradeneeded = (event) => {
         const db = event.target.result
@@ -180,9 +176,9 @@ customElements.define('my-messages-app',
         db.createObjectStore('username')
       }
       /**
-       * Called when database onsucess. Get messages.
+       * Called when database onsucess. Get messages and username.
        *
-       * @param {object} event the event.
+       * @param {object} event The event object.
        */
       this.request.onsuccess = (event) => {
         this._getMessages(event)
@@ -206,15 +202,14 @@ customElements.define('my-messages-app',
         this._textInput.value += event.detail.unicode
       })
 
-      //       when the mouse pointer leavs the bart board. This should stop the printing.
-      this._textForm.addEventListener('submit', (e) => {
-        e.preventDefault()
+      // Send message on submit.
+      this._textForm.addEventListener('submit', (event) => {
+        event.preventDefault()
         this._sendText()
       })
-      // Enter submit
-      this._textInput.addEventListener('keydown', (e) => {
-        console.log(e.keyCode)
-        if (e.keyCode === 13) {
+      // Submit on Enter key.
+      this._textInput.addEventListener('keydown', (event) => {
+        if (event.keyCode === 13) {
           this._sendText()
         }
       })
@@ -222,43 +217,44 @@ customElements.define('my-messages-app',
       /**
        * Called by the browser engine when an attribute changes.
        *
-       * @param {any} e the new attribute value.
+       * @param {any} event the new attribute value.
        */
-      this.socket.onopen = (e) => {
-        console.log(e)
+      this.socket.onopen = (event) => {
+        console.log(event)
       }
 
       /**
-       * On message received from websocket.
+       * On message received from Web Socket.
        *
-       * @param {any} event the event.
+       * @param {any} event The event object.
        */
       this.socket.onmessage = (event) => {
-        const msg = JSON.parse(event.data)
+        // Add message to conversation element.
+        const message = JSON.parse(event.data)
         const senderText = document.createElement('p')
-        let d = new Date()
-        d = d.toLocaleString('sv-SE')
-        senderText.textContent = `${msg.username}: ${msg.data} (${d})`
+        let date = new Date()
+        date = date.toLocaleString('sv-SE')
+        senderText.textContent = `${message.username}: ${message.data} (${date})`
         this._main.appendChild(senderText)
-        // Scroll bottom
+        // Scroll to focus on bottom conversation element.
         this._main.scrollTop = this._main.scrollHeight
-        // Open IndexedDB transaction
+        // Open IndexedDB transaction.
         const db = this.request.result
         const transaction = db.transaction(['messages'], 'readwrite')
         const objectStore = transaction.objectStore('messages')
-        // Add message to IndexedDB
-        if (msg.username !== 'The Server') {
-          objectStore.add({ name: msg.username, message: msg.data, date: d }, d)
+        // Add message to IndexedDB.
+        if (message.username !== 'The Server') {
+          objectStore.add({ name: message.username, message: message.data, date: date }, date)
         }
       }
     }
 
     /**
-     * Send message to socket.
+     * Send message to Web Socket.
      *
      */
     _sendText () {
-      const msg = {
+      const message = {
         type: 'message',
         data: this._textInput.value,
         username: this._userName,
@@ -266,16 +262,17 @@ customElements.define('my-messages-app',
         key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
       // Send the message
-      this.socket.send(JSON.stringify(msg))
+      this.socket.send(JSON.stringify(message))
       this._textInput.value = ''
     }
 
     /**
      * Get previous messages from IndexedDB.
      *
-     * @param {object} event the event.
+     * @param {object} event The event object.
      */
     _getMessages (event) {
+      // Open IndexedDB transaction.
       const db = event.target.result
       const transaction = db.transaction(['messages'])
       const objectStore = transaction.objectStore('messages')
@@ -294,22 +291,23 @@ customElements.define('my-messages-app',
     }
 
     /**
-     * Add message to Chat UI from indexedDB.
+     * Add message to conversations element from indexedDB.
      *
-     * @param {object} msg of the attribute.
+     * @param {object} message The message object.
      */
-    _addMessage (msg) {
+    _addMessage (message) {
       const senderText = document.createElement('p')
-      senderText.textContent = `${msg.name}: ${msg.message} (${msg.date})`
+      senderText.textContent = `${message.name}: ${message.message} (${message.date})`
       this._main.appendChild(senderText)
     }
 
     /**
      * Get username from IndexedDB.
      *
-     * @param {object} event the event.
+     * @param {object} event The IndexedDB event object.
      */
     _getUsername (event) {
+      // Open IndexedDB transaction.
       const db = event.target.result
       const transaction = db.transaction(['username'])
       const objectStore = transaction.objectStore('username')
@@ -317,7 +315,7 @@ customElements.define('my-messages-app',
       /**
        * Get username from database.
        *
-       * @param {object} event the event.
+       * @param {object} event The event object.
        */
       result.onsuccess = (event) => {
         if (!event.target.result.length) {
@@ -333,16 +331,17 @@ customElements.define('my-messages-app',
      *
      */
     _addUsername () {
+      // Open IndexedDB transaction.
       const db = this.request.result
       const transaction = db.transaction(['username'], 'readwrite')
       const objectStore = transaction.objectStore('username')
       const username = prompt('Please input your username')
-      objectStore.add({ name: username }, 'username1')
-      const result = objectStore.get('username1')
+      objectStore.add({ name: username }, 'user0')
+      const result = objectStore.get('user0')
       /**
        * Set username from database.
        *
-       * @param {object} event the event.
+       * @param {object} event The event object.
        */
       result.onsuccess = (event) => {
         this._userName = event.target.result.name
@@ -350,34 +349,10 @@ customElements.define('my-messages-app',
     }
 
     /**
-     * Watches the attributes "text" and "speed" for changes on the element.
-     *
-     * @returns {Array} The observed attributes.
-     *
-     */
-    static get observedAttributes () {
-      // TODO: Add observer for text and speed.
-      return ['text', 'speed']
-    }
-
-    /**
-     * Called by the browser engine when an attribute changes.
-     *
-     * @param {string} name of the attribute.
-     * @param {any} oldValue the old attribute value.
-     * @param {any} newValue the new attribute value.
-     */
-    attributeChangedCallback (name, oldValue, newValue) {
-      // TODO: Add your code for handling updates and creation of the observed attributes.
-      if (name === 'text') { this.text = newValue + ' ' }
-      if (name === 'speed') { this.speed = newValue }
-    }
-
-    /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      // TODO: Remove your eventlisterners here.
+      // Close web-socket.
       this.socket.close()
     }
   }
