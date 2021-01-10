@@ -1,8 +1,6 @@
 /**
  * The my-camera-app web component module.
  *
- * @author Johan Leitet <johan.leitet@lnu.se>
- * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
  */
@@ -35,7 +33,7 @@ template.innerHTML = `
     }
     #video {
       grid-area: video;
-      background-color: #ffffff;
+      background-color: #000000;
     }
     #controls {
       grid-area: control;
@@ -63,8 +61,7 @@ template.innerHTML = `
   <header>You're on camera, Smile :)</header>
   <video id="video">Video stream not available.</video>
   <canvas id="canvas"></canvas>
-  <div id="controls">
-  </div>
+  <div id="controls"></div>
 `
 
 /**
@@ -86,12 +83,11 @@ customElements.define('my-camera-app',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      // TODO: Maybee you need to define some default values here
+      // Path to module
       this.pathToModule = import.meta.url
       this.path = new URL('./', this.pathToModule)
 
-      // Get the p-element in which we add the text.
-      this._textElement = this.shadowRoot.querySelector('p')
+      // Initialization.
       this._constrols = this.shadowRoot.querySelector('#controls')
       this._video = this.shadowRoot.querySelector('#video')
       this._canvas = this.shadowRoot.querySelector('#canvas')
@@ -103,21 +99,17 @@ customElements.define('my-camera-app',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      // Start video stream.
+      this._camera()
+      // Add camera shutter button
       this.shutter = document.createElement('img')
       this.shutter.setAttribute('src', `${this.path}images/shutter_button.svg`)
       this.shutter.setAttribute('title', 'Shutter button')
       this.shutter.setAttribute('id', 'shutter')
       this._constrols.appendChild(this.shutter)
-      // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
-      //       when the mouse pointer leavs the bart board. This should stop the printing.
-      // Start video
-      console.log(this._video.width)
-      this._camera()
-      // Camera shutter
       this.shutter.addEventListener('click', () => {
         try {
           this._takePhoto()
-          console.log('photo taken!')
         } catch (error) {
           console.error(error)
         }
@@ -125,7 +117,7 @@ customElements.define('my-camera-app',
     }
 
     /**
-     * Called after the element has been removed from the DOM.
+     * Starts the camera application, calls MediaDevices.getUserMedia() and requests a video stream.
      */
     _camera () {
       navigator.mediaDevices.getUserMedia({ video: true, audio: false })
@@ -139,17 +131,18 @@ customElements.define('my-camera-app',
     }
 
     /**
-     * Called after the element has been removed from the DOM.
+     * Captures a frame from the video stream.
      */
     _takePhoto () {
+      // Captures the frame.
       const context = this._canvas.getContext('2d')
       this._canvas.width = 640
       this._canvas.height = 480
       context.drawImage(this._video, 0, 0, this._canvas.width, this._canvas.height)
       const data = this._canvas.toDataURL('image/png')
-      // play shutter sound
+      // Play shutter sound.
       this._shutterSound.play()
-      // custom event
+      // Dispatch a custom event with the frame taken.
       this.dispatchEvent(new CustomEvent('photo', {
         bubbles: true,
         composed: true,
@@ -158,7 +151,7 @@ customElements.define('my-camera-app',
     }
 
     /**
-     * Called after the element has been removed from the DOM.
+     * Stops the video stream.
      *
      * @param {object} videoElement the video element.
      */
@@ -179,46 +172,6 @@ customElements.define('my-camera-app',
     disconnectedCallback () {
       // Stop the video stream.
       this._stopCamera(this._video)
-    }
-
-    /**
-     * Stops the writing.
-     *
-     */
-    stopWriting () {
-      // TODO: Implement the method
-    }
-
-    /**
-     * Wipes the board clean and resets the letter counter.
-     */
-    clear () {
-      // TODO: Implement the method
-    }
-    // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
-
-    /**
-     * Watches the attributes "text" and "speed" for changes on the element.
-     *
-     * @returns {Array} The observed attributes.
-     *
-     */
-    static get observedAttributes () {
-      // TODO: Add observer for text and speed.
-      return ['text', 'speed']
-    }
-
-    /**
-     * Called by the browser engine when an attribute changes.
-     *
-     * @param {string} name of the attribute.
-     * @param {any} oldValue the old attribute value.
-     * @param {any} newValue the new attribute value.
-     */
-    attributeChangedCallback (name, oldValue, newValue) {
-      // TODO: Add your code for handling updates and creation of the observed attributes.
-      if (name === 'text') { this.text = newValue + ' ' }
-      if (name === 'speed') { this.speed = newValue }
     }
   }
 )

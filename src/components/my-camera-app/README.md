@@ -1,45 +1,31 @@
-# &lt;bart-board&gt;
-A web component used to simulate the intro scene from Simpsons, were Bart is writing on the black board.
-
-## Attributes
-
-### `text`
-A String attribute; that, if specified, contains the text that will be written out, letter by letter, on the black board.
-
-Default value: `I will never ever skip the line in the task queue again.`
-
-### `speed`
-A Number indicating the speed in milliseconds, of which the letters will appear on the screen. 
-
-Default value: `50`
+# &lt;my-camera-app&gt;
+A camera application that starts a video stream from the web camera using WebRTC and can capture frames from the video stream. 
 
 ## Methods
 
-### `clear()`
-A method that when called will clear the text written on the board.
+### `_camera()`
+A method that calls `MediaDevices.getUserMedia()` and requests a video stream.
+The callback receives a stream object, the error callback is called if opening the stream doesn't work. 
+When the video stream is linked to the video elements `srcObject` property, the video starts playing with the `.play()` method.
 
-Parameters: none
+### `_takePhoto()`
+When called, the method captures the currently displayed video frame. 
 
-Returns: Reference to self.
+A camera shutter sound is played when a frame is captured, using the Audio object with a MP3 file and play() method.
 
-### `stopWriting()`
-When called, will stop writing of the board.
+The captured frame is converted into a PNG file a custom event is dispatched with the PNG file.
 
-Parameters: none
-
-Returns: Reference to self.
-
-## Events
+#### Events
 | Event Name | Fired When |
 |------------|------------|
-| `filled`| The board is filled with text.
+| `photo`| A video frame is captured.
 
-## Styling with CSS
-The text (p-element) is styleable using the part `text`
+### `_stopCamera(videoElement)`
+Stops the initiated video stream. Called when the element is removed from the DOM.
+
+Parameter: `videoElement` The DOM video element containing the video stream.
 
 ## Example
 ```html
-   <bart-board text="This is the text that will be written" speed="50"></bart-board>
+   <my-camera-app></my-camera-app>
 ```
-
-![Example of the functions of the bart-board](./.readme/example.gif)
