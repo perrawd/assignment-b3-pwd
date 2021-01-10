@@ -69,7 +69,7 @@ template.innerHTML = `
  */
 customElements.define('my-camera-app',
 /**
- * Define custom element.
+ * A new HTMLElement class instance.
  */
   class extends HTMLElement {
     /**
@@ -78,8 +78,7 @@ customElements.define('my-camera-app',
     constructor () {
       super()
 
-      // Attach a shadow DOM tree to this element and
-      // append the template to the shadow root.
+      // Attach a shadow DOM tree to this element and append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
