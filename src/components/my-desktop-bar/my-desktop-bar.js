@@ -1,8 +1,6 @@
 /**
  * The desktop-bar web component module.
  *
- * @author Johan Leitet <johan.leitet@lnu.se>
- * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
  */
@@ -44,7 +42,7 @@ template.innerHTML = `
  */
 customElements.define('my-desktop-bar',
 /**
- * Define custom element.
+ * A new HTMLElement class instance.
  */
   class extends HTMLElement {
     /**
@@ -53,15 +51,12 @@ customElements.define('my-desktop-bar',
     constructor () {
       super()
 
-      // Attach a shadow DOM tree to this element and
-      // append the template to the shadow root.
+      // Attach a shadow DOM tree to this element and append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
       // Get the p-element in which we add the text.
-      this._textElement = this.shadowRoot.querySelector('#topbar')
-
-      // TODO: Maybee you need to define some default values here
+      this._clock = this.shadowRoot.querySelector('#topbar')
     }
 
     /**
@@ -69,19 +64,20 @@ customElements.define('my-desktop-bar',
      */
     connectedCallback () {
       setInterval(() => {
-        this.clock()
+        this._clock.textContent = this.currentTime()
       }, 1000)
     }
 
     /**
      *
-     * The time.
+     * The current time.
+     *
+     * @returns {string} The current time in HH:MM format.
      */
-    clock () {
-      let currentTime = new Date()
+    currentTime () {
+      const currentTime = new Date()
       // const currentDate = currentTime.toLocaleString('sv-SE').slice(0, 10)
-      currentTime = currentTime.toLocaleString('sv-SE').slice(11, 16)
-      this._textElement.textContent = currentTime
+      return currentTime.toLocaleString('sv-SE').slice(11, 16)
     }
   }
 )

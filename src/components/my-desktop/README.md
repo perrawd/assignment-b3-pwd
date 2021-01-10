@@ -1,45 +1,29 @@
-# &lt;bart-board&gt;
-A web component used to simulate the intro scene from Simpsons, were Bart is writing on the black board.
+# &lt;my-desktop&gt;
+A web component that simulates a operating system desktop. 
+Along with the `my-window` component, it is one of the main control programs of the PWD application. 
 
-## Attributes
+## Main functionalities: 
+* Specifies the viewport of the PWD application.
+* Handles opening and closing sub-applications by adding or removing them to and from the DOM
+* Display a background image.
 
-### `text`
-A String attribute; that, if specified, contains the text that will be written out, letter by letter, on the black board.
+## Other components included and initiated
+### `my-dock`
+### `my-desktop-bar`
 
-Default value: `I will never ever skip the line in the task queue again.`
+## Eventlisteners
 
-### `speed`
-A Number indicating the speed in milliseconds, of which the letters will appear on the screen. 
+### `openApp`
+When an `openApp` event is received, a specified sub-application is added to the desktop environment. 
+The sub-application is added via a `my-window` component containing the specified sub-application component, these are added to the DOM.
 
-Default value: `50`
+### `close`
+When an `close` event is received, a specified sub-application is removed from the desktop environment and from the DOM.
 
-## Methods
-
-### `clear()`
-A method that when called will clear the text written on the board.
-
-Parameters: none
-
-Returns: Reference to self.
-
-### `stopWriting()`
-When called, will stop writing of the board.
-
-Parameters: none
-
-Returns: Reference to self.
-
-## Events
-| Event Name | Fired When |
-|------------|------------|
-| `filled`| The board is filled with text.
-
-## Styling with CSS
-The text (p-element) is styleable using the part `text`
+### `photo`
+When an `photo` event is received from the `my-camera-app` sub-application, the `my-photo` component is added via a `my-window` component containing the specified image. 
 
 ## Example
 ```html
-   <bart-board text="This is the text that will be written" speed="50"></bart-board>
+   <my-desktop></my-desktop>
 ```
-
-![Example of the functions of the bart-board](./.readme/example.gif)
