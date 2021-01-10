@@ -1,8 +1,6 @@
 /**
  * The my-window web component module.
  *
- * @author Johan Leitet <johan.leitet@lnu.se>
- * @author Mats Loock <mats.loock@lnu.se>
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
  */
@@ -26,32 +24,20 @@ template.innerHTML = `
       top: 30px;
       left: 1px;
     }
-    #window {
-      /*
-      border-top: 25px solid red;
-      */
-    }
     #close {
       width: 18px;
       height: 18px;
       text-align: center;
-      background: rgb(131,58,180);
-      background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
       display: inline-block;
-      border-radius: 50%;
       margin: 1px
     }
     #close:hover {
       cursor: default;
     }
-    img {
-      
-    }
   </style>
   <div part="window" id="window">
-  <div id="close"></div>
+    <div id="close"></div>
   </div>
-  
 `
 
 /**
@@ -59,7 +45,7 @@ template.innerHTML = `
  */
 customElements.define('my-window',
 /**
- * Define custom element.
+ * A new HTMLElement class instance.
  */
   class extends HTMLElement {
     /**
@@ -68,18 +54,16 @@ customElements.define('my-window',
     constructor () {
       super()
 
-      // Attach a shadow DOM tree to this element and
-      // append the template to the shadow root.
+      // Attach a shadow DOM tree to this element and append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      // Get the p-element in which we add the text.
+      // Default values.
       this._windowBar = this.shadowRoot.querySelector('#window')
       this._closeButton = this.shadowRoot.querySelector('#close')
-      // Close button
+      // Add close button.
       this.pathToModule = import.meta.url
       this.path = new URL('./img/', this.pathToModule)
-      console.log(this.path)
       const img = document.createElement('img')
       img.setAttribute('src', `${this.path}close.png`)
       img.setAttribute('height', '18px')
@@ -88,13 +72,13 @@ customElements.define('my-window',
     }
 
     /**
-     * Watches the attributes "text" and "speed" for changes on the element.
+     * Watches the attribute "app" for applying sub-application.
      *
      * @returns {Array} The observed attributes.
      *
      */
     static get observedAttributes () {
-      // TODO: Add observer for text and speed.
+      // Add observer for app.
       return ['app']
     }
 
@@ -106,7 +90,7 @@ customElements.define('my-window',
      * @param {any} newValue the new attribute value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-      // TODO: Add your code for handling updates and creation of the observed attributes.
+      // Attaches the specified sub-application component to the window.
       if (name === 'app') {
         const addApp = document.createElement(newValue)
         this.shadowRoot.appendChild(addApp)
@@ -117,14 +101,13 @@ customElements.define('my-window',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
-      //       when the mouse pointer leavs the bart board. This should stop the printing.
       // Default z-index
       this.style.zIndex = 100
-      // this._windowBar.addEventListener('mousedown', this.moveWindow)
+      // Start dragWindow method for the window.
       this.dragWindow(this)
+      // Close window.
       this._closeButton.addEventListener('click', (e) => {
-        this.dispatchEvent(new CustomEvent('close', {
+        this.dispatchEvent(new CustomEvent('closeApp', {
           bubbles: true,
           composed: true,
           detail: { window: this }
@@ -133,14 +116,13 @@ customElements.define('my-window',
     }
 
     /**
-     * Makes windows draggable across dekstop within viewport.
+     * Makes windows draggable across the desktop within viewport.
      * Code for draggable windows inspired by https://www.w3schools.com/howto/howto_js_draggable.asp.
-     * Viewport code by me.
+     * Viewport and focus code by me.
      *
      * @param {string} window of the attribute.
      */
     dragWindow (window) {
-      // const that = this
       let pos1 = 0
       let pos2 = 0
       let pos3 = 0
@@ -149,29 +131,33 @@ customElements.define('my-window',
       /**
        * On mousedown.
        *
-       * @param {string} event of the attribute.
+       * @param {string} event The event object.
        */
       const dragMouseDown = (event) => {
-        this.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => (app.style.zIndex = Number(app.style.zIndex) - 1))
+        // Set top focus on windowbar mousedown...
         this.style.zIndex = '200'
+        // and decrease focus on all other windows.
+        this.shadowRoot.host.parentNode.querySelectorAll('my-window').forEach(app => (app.style.zIndex = Number(app.style.zIndex) - 1))
+        // Default event values.
         event = event || window.event
         event.preventDefault()
-        // get the mouse cursor position at startup:
+        // Get the mouse cursor position at startup:
         pos3 = event.clientX
         pos4 = event.clientY
         document.onmouseup = closeDragElement
-        // call a function whenever the cursor moves:
+        // Call a function whenever the cursor moves:
         document.onmousemove = windowDrag
       }
 
       /**
        * Moves the window.
        *
-       * @param {string} event The event.
+       * @param {string} event The event object.
        */
       const windowDrag = (event) => {
         event = event || window.event
         event.preventDefault()
+        // Viewport limits
         if (this.getBoundingClientRect().y <= 0) {
           this.style.top = '1px'
           closeDragElement()
@@ -185,12 +171,12 @@ customElements.define('my-window',
           this.style.top = (document.documentElement.clientHeight - this.offsetHeight - 1) + 'px'
           closeDragElement()
         } else {
-          // calculate the new cursor position:
+          // Set the new cursor position:
           pos1 = pos3 - event.clientX
           pos2 = pos4 - event.clientY
           pos3 = event.clientX
           pos4 = event.clientY
-          // set the element's new position:
+          // Set element new position:
           this.style.top = (this.offsetTop - pos2) + 'px'
           this.style.left = (this.offsetLeft - pos1) + 'px'
         }
@@ -200,37 +186,13 @@ customElements.define('my-window',
        * Stop moving when mouse button is released.
        *
        */
-      function closeDragElement () {
+      const closeDragElement = () => {
         document.onmouseup = null
         document.onmousemove = null
       }
 
-      // The window bar of which
+      // The window bar onmousedown to activate the function.
       this._windowBar.onmousedown = dragMouseDown
     }
-
-    /**
-     * Called after the element has been removed from the DOM.
-     */
-    disconnectedCallback () {
-      // TODO: Remove your eventlisterners here.
-    }
-
-    /**
-     * Stops the writing.
-     *
-     */
-    stopWriting () {
-      // TODO: Implement the method
-    }
-
-    /**
-     * Wipes the board clean and resets the letter counter.
-     */
-    clear () {
-      // TODO: Implement the method
-    }
-
-    // TODO: Add methods at will. The solution file will use the aditional: "_onWrite"
   }
 )

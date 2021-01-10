@@ -17,8 +17,8 @@ Along with the `my-window` component, it is one of the main control programs of 
 When an `openApp` event is received, a specified sub-application is added to the desktop environment. 
 The sub-application is added via a `my-window` component containing the specified sub-application component, these are added to the DOM.
 
-### `close`
-When an `close` event is received, a specified sub-application is removed from the desktop environment and from the DOM.
+### `closeApp`
+When an `closeApp` event is received, a specified sub-application is removed from the desktop environment and from the DOM.
 
 ### `photo`
 When an `photo` event is received from the `my-camera-app` sub-application, the `my-photo` component is added via a `my-window` component containing the specified image. 

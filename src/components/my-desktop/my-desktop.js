@@ -65,7 +65,7 @@ customElements.define('my-desktop',
         this.shadowRoot.appendChild(myWindow)
       })
       // Eventlistener, removes my-window component with specified app from the DOM.
-      this.addEventListener('close', (event) => {
+      this.addEventListener('closeApp', (event) => {
         const thisWindow = event.detail.window
         this.shadowRoot.removeChild(thisWindow)
       })
