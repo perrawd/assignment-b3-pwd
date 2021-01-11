@@ -15,8 +15,8 @@ template.innerHTML = `
       display: block;
       background-color:rgba(0, 0, 0, 0.9);
       color: #ffffff;
-      width:500px;
-      height:60px;
+      width: 300px;
+      height: 60px;
       border: 3px solid #000000;
       border-radius: 10px;
       position: fixed;
@@ -32,6 +32,8 @@ template.innerHTML = `
     }
     img {
       max-height: 55px;
+      margin-left: 5px;
+      margin-right: 5px;
     }
 
     img:hover {

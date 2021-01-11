@@ -4,10 +4,6 @@
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
  */
-
-// import { io } from 'socket.io-client'
-// import { openDB, deleteDB, wrap, unwrap } from 'idb'
-// import { EmojiButton } from '@joeattardi/emoji-button'
 import 'emoji-picker-element'
 import { createPopper } from '@popperjs/core'
 

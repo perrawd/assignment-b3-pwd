@@ -30,6 +30,7 @@ template.innerHTML = `
       color: #ffd500;
       text-align: center;
       font-size: small;
+      padding: 2px;
     }
     #video {
       grid-area: video;
@@ -58,7 +59,7 @@ template.innerHTML = `
     }
   </style>
 
-  <header>You're on camera, Smile :)</header>
+  <header>You're on camera. Smile :)</header>
   <video id="video">Video stream not available.</video>
   <canvas id="canvas"></canvas>
   <div id="controls"></div>
