@@ -48,9 +48,9 @@ template.innerHTML = `
  * Define custom element.
  */
 customElements.define('high-score',
-  /**
-   * Define class.
-   */
+/**
+ * A new HTMLElement class instance.
+ */
   class extends HTMLElement {
     /**
      * Creates an instance of the current type.

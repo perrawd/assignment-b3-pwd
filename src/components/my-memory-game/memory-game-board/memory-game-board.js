@@ -35,9 +35,9 @@ template.innerHTML = `
  * Define custom element.
  */
 customElements.define('memory-game-board',
-  /**
-   * Define custom element.
-   */
+/**
+ * A new HTMLElement class instance.
+ */
   class extends HTMLElement {
     /**
      * Creates an instance of the current type.

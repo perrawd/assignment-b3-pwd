@@ -41,7 +41,7 @@ template.innerHTML = `
       transform: scale(1.1);
     }
   </style>
-<div id="icons"><div>
+<div id="icons"></div>
 `
 
 /**
@@ -76,39 +76,37 @@ customElements.define('my-dock',
       this.chat = document.createElement('img')
       this.chat.setAttribute('src', `${this.path}chat.png`)
       this.chat.setAttribute('title', 'Chat app')
+      this.chat.setAttribute('alt', 'my-messages-app')
       this.icons.appendChild(this.chat)
       // Memory game icon
       this.memory = document.createElement('img')
       this.memory.setAttribute('src', `${this.path}memorygame.png`)
       this.memory.setAttribute('title', 'Memory game app')
+      this.memory.setAttribute('alt', 'my-memory-game')
       this.icons.appendChild(this.memory)
       // Memory game icon
       this.cam = document.createElement('img')
       this.cam.setAttribute('src', `${this.path}camera.png`)
       this.cam.setAttribute('title', 'Camera app')
+      this.cam.setAttribute('alt', 'my-camera-app')
       this.icons.appendChild(this.cam)
       // Dispatch events to start apps
-      this.chat.addEventListener('click', (e) => {
-        this.dispatchEvent(new CustomEvent('openApp', {
-          bubbles: true,
-          composed: true,
-          detail: { name: 'my-messages-app' }
-        }))
-      })
-      this.memory.addEventListener('click', (e) => {
-        this.dispatchEvent(new CustomEvent('openApp', {
-          bubbles: true,
-          composed: true,
-          detail: { name: 'my-memory-game' }
-        }))
-      })
-      this.cam.addEventListener('click', (e) => {
-        this.dispatchEvent(new CustomEvent('openApp', {
-          bubbles: true,
-          composed: true,
-          detail: { name: 'my-camera-app' }
-        }))
-      })
+      this.chat.addEventListener('click', this._openApp)
+      this.memory.addEventListener('click', this._openApp)
+      this.cam.addEventListener('click', this._openApp)
+    }
+
+    /**
+     * Dispatches an openApp event.
+     *
+     */
+    _openApp () {
+      console.log(this)
+      this.dispatchEvent(new CustomEvent('openApp', {
+        bubbles: true,
+        composed: true,
+        detail: { name: this.getAttribute('alt') }
+      }))
     }
   }
 )

@@ -4,12 +4,8 @@ Should be used with `my-desktop` web component.
 
 ## Methods
 
-### `clear()`
-A method that when called will clear the text written on the board.
-
-Parameters: none
-
-Returns: Reference to self.
+### `_openApp()`
+Dispatches an `openApp` event when a app icon is clicked on.
 
 ## Events
 | Event Name | Fired When |

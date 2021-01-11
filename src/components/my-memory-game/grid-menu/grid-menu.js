@@ -56,9 +56,9 @@ template.innerHTML = `
  * Define custom element.
  */
 customElements.define('grid-menu',
-  /**
-   * Define custom element.
-   */
+/**
+ * A new HTMLElement class instance.
+ */
   class extends HTMLElement {
     /**
      * Creates an instance of the current type.

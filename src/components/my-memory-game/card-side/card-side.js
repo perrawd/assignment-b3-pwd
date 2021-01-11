@@ -36,9 +36,9 @@ template.innerHTML = `
  * Define custom element.
  */
 customElements.define('card-side',
-  /**
-   * Define class.
-   */
+/**
+ * A new HTMLElement class instance.
+ */
   class extends HTMLElement {
     /**
      * Creates an instance of the current type.
