@@ -101,7 +101,6 @@ customElements.define('my-dock',
      *
      */
     _openApp () {
-      console.log(this)
       this.dispatchEvent(new CustomEvent('openApp', {
         bubbles: true,
         composed: true,
