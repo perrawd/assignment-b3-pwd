@@ -1,3 +1,30 @@
+# &lt;my-memory-game&gt;
+A Memory Game application.
+
+## Dependencies
+This application requires the following web components. 
+Please see documentation for respective component for more information.
+
+### `memory-game-board`
+This component handles the main game logic.
+
+### `grid-menu`
+This component gives the user the ability to select a type of game (4x4, 4x2, and 2x2).
+
+### `card-tile`
+Represents a card tile. Requires 'card-side' component.
+
+### `card-side`
+Represents a card side. Part of card-tile component.
+
+### `high-score`
+Presents a message and high score when the game is completed.
+
+## Example
+```html
+   <my-memory-game></my-memory-game>
+```
+
 # Memory Game
 
 In this exercise, you will create a simple [memory game](https://en.wikipedia.org/wiki/Concentration_(card_game)).
@@ -8,16 +35,16 @@ In a memory game, several pairs of tiles are placed face down in a grid. The poi
 
 ## Requirements
 
-[] The game must offer the ability to be rendered with different sizes of the grid, 4x4, 4x2, and 2x2. (attributes?)
-[] The player has to be able to flip the tiles with the mouse and keyboard.
-[] The player must only be able to flip two tiles face up at a time.
-[] After a suitable time, matching tiles that face up must not have a visible representation in the grid.
-[] After an appropriate time, tiles facing up and not matching must be flipped face down.
-[] The positions, or rather the images, of the tiles in the grid must be randomized before each game round.
-[] Throughout a game round, the tiles must retain their original positions in the grid.
-[] Fire synthetic events when tiles match, do not match, and when a game round is over.
-[] The game must count how many attempts the player has made to find matching tiles and present the number of attempts when the game round is over.
-[] After a game round is over, the user must be allowed to start a new game round without having to reload the page.
+[X] The game must offer the ability to be rendered with different sizes of the grid, 4x4, 4x2, and 2x2. (attributes?)
+[X] The player has to be able to flip the tiles with the mouse and keyboard.
+[X] The player must only be able to flip two tiles face up at a time.
+[X] After a suitable time, matching tiles that face up must not have a visible representation in the grid.
+[X] After an appropriate time, tiles facing up and not matching must be flipped face down.
+[X] The positions, or rather the images, of the tiles in the grid must be randomized before each game round.
+[X] Throughout a game round, the tiles must retain their original positions in the grid.
+[X] Fire synthetic events when tiles match, do not match, and when a game round is over.
+[X] The game must count how many attempts the player has made to find matching tiles and present the number of attempts when the game round is over.
+[X] After a game round is over, the user must be allowed to start a new game round without having to reload the page.
 
 ## Hints
 

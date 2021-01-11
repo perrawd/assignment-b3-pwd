@@ -1,5 +1,5 @@
 /**
- * The my-memory-game web component module.
+ * The memory-game-board web component module.
  *
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
@@ -45,8 +45,7 @@ customElements.define('memory-game-board',
     constructor () {
       super()
 
-      // Attach a shadow DOM tree to this element and
-      // append the template to the shadow root.
+      // Attach a shadow DOM tree to this element and append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       // Declarations.
@@ -121,7 +120,7 @@ customElements.define('memory-game-board',
     /**
      * Shuffle the tiles.
      *
-     * @param {*} newValue The grid.
+     * @param {*} newValue The tiles that needs to be shuffled.
      */
     shuffleImages (newValue) {
       for (let i = 0; i < 2; i++) {
