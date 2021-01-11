@@ -1,0 +1,20 @@
+{
+    "name": "Personal Web Desktop (PWD)",
+    "short_name": "PWD",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "description": "Assignment B3 PWD",
+    "icons": [
+        {
+            "src": "images/icon-512x512.png",
+            "sizes": "512x512",
+            "type":  "image/png"
+        },
+        {
+            "src": "images/icon-128x128.png",
+            "sizes": "128x128",
+            "type":  "image/png"
+        }
+    ]
+}

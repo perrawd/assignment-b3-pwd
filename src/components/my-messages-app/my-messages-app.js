@@ -227,9 +227,9 @@ customElements.define('my-messages-app',
       this.socket.onmessage = (event) => {
         // Add message to conversation element.
         const message = JSON.parse(event.data)
-        const senderText = document.createElement('p')
         let date = new Date()
         date = date.toLocaleString('sv-SE')
+        const senderText = document.createElement('p')
         senderText.textContent = `${message.username}: ${message.data} (${date})`
         this._main.appendChild(senderText)
         // Scroll to focus on bottom conversation element.
