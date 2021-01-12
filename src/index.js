@@ -2,6 +2,8 @@
  * The main script file of the application.
  *
  * @author Per Rawdin <per.rawdin@student.lnu.se>
+ * @author Johan Leitet <johan.leitet@lnu.se>
+ * @author Mats Loock <mats.loock@lnu.se>
  * @version 1.0.0
  */
 
@@ -17,6 +19,7 @@ if ('serviceWorker' in navigator) {
   })
 }
 
+// Restart Desktop application.
 window.addEventListener('restart', () => {
   const newApp = document.createElement('my-desktop')
   document.body.replaceChild(newApp, document.querySelector('my-desktop'))

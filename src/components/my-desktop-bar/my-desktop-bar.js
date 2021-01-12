@@ -43,12 +43,17 @@ template.innerHTML = `
     #about:hover {
       cursor: default;
       transition: transform .2s;
-      transform: scale(1.1);
+      transform: scale(1.2);
     }
     #restart{
       position: absolute;
       right: 3px;
       top: 3px;
+    }
+    #restart:hover {
+      cursor: default;
+      transition: transform .2s;
+      transform: scale(1.2);
     }
   </style>
 

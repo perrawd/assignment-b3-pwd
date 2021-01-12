@@ -1,45 +1,21 @@
-# &lt;bart-board&gt;
-A web component used to simulate the intro scene from Simpsons, were Bart is writing on the black board.
+# &lt;my-about-app&gt;
+A `About` application with short description and credits for the Personal Web Desktop assignment.
 
-## Attributes
+# Personal Web Desktop
 
-### `text`
-A String attribute; that, if specified, contains the text that will be written out, letter by letter, on the black board.
+## 1DV025 Assignment B3
 
-Default value: `I will never ever skip the line in the task queue again.`
+### Per Rawdin
 
-### `speed`
-A Number indicating the speed in milliseconds, of which the letters will appear on the screen. 
+#### 2020-2021
 
-Default value: `50`
+## Credits
 
-## Methods
+PWD: https://www.w3schools.com/howto/howto_js_draggable.asp & sweetalert2
 
-### `clear()`
-A method that when called will clear the text written on the board.
-
-Parameters: none
-
-Returns: Reference to self.
-
-### `stopWriting()`
-When called, will stop writing of the board.
-
-Parameters: none
-
-Returns: Reference to self.
-
-## Events
-| Event Name | Fired When |
-|------------|------------|
-| `filled`| The board is filled with text.
-
-## Styling with CSS
-The text (p-element) is styleable using the part `text`
+Chat app: emoji-picker-element & popperjs
 
 ## Example
 ```html
-   <bart-board text="This is the text that will be written" speed="50"></bart-board>
+   <my-about-app></my-about-app>
 ```
-
-![Example of the functions of the bart-board](./.readme/example.gif)
