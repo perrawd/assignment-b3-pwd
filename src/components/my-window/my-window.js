@@ -4,9 +4,8 @@
  * @author Per Rawdin <per.rawdin@student.lnu.se>
  * @version 1.0.0
  */
-import '../my-about-app/'
-import '../my-messages-app/'
-import '../my-memory-game/my-memory-game/'
+
+const IMAGES_URL = new URL('./images/', import.meta.url).href
 
 /**
  * Define template.
@@ -36,7 +35,9 @@ template.innerHTML = `
     }
   </style>
   <div part="window" id="window">
-    <div id="close"></div>
+    <div id="close">
+      <img src=${IMAGES_URL}close.png width="18px height="18px">
+    </div>
   </div>
 `
 
@@ -61,14 +62,6 @@ customElements.define('my-window',
       // Default values.
       this._windowBar = this.shadowRoot.querySelector('#window')
       this._closeButton = this.shadowRoot.querySelector('#close')
-      // Add close button.
-      this.pathToModule = import.meta.url
-      this.path = new URL('./img/', this.pathToModule)
-      const img = document.createElement('img')
-      img.setAttribute('src', `${this.path}close.png`)
-      img.setAttribute('height', '18px')
-      img.setAttribute('width', '18px')
-      this._closeButton.appendChild(img)
     }
 
     /**
