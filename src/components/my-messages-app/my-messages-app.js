@@ -227,7 +227,6 @@ customElements.define('my-messages-app',
         this._emojiPicker.classList.toggle('shown')
       })
       this.shadowRoot.querySelector('emoji-picker').addEventListener('emoji-click', (event) => {
-        console.log(event.detail)
         this._textInput.value += event.detail.unicode
       })
 
@@ -263,7 +262,6 @@ customElements.define('my-messages-app',
         let date = new Date()
         date = date.toLocaleString('sv-SE')
         message.date = date
-        console.log(message)
         this._addMessage(message)
         // Scroll to focus on bottom conversation element.
         this._main.scrollTop = this._main.scrollHeight
