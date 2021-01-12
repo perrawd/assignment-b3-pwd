@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+const ICONS_URL = new URL('./icons/', import.meta.url).href
+
 /**
  * Define template.
  */
@@ -41,7 +43,11 @@ template.innerHTML = `
       transform: scale(1.1);
     }
   </style>
-<div id="icons"></div>
+<div id="icons">
+    <img src=${ICONS_URL}chat.png id="chat" alt="my-messages-app" title="Chat app">
+    <img src=${ICONS_URL}memorygame.png id="memory" alt="my-memory-game" title="Memory game app">
+    <img src=${ICONS_URL}camera.png id="cam" alt="my-camera-app" title="Camera app">
+</div>
 `
 
 /**
@@ -63,34 +69,16 @@ customElements.define('my-dock',
         .appendChild(template.content.cloneNode(true))
 
       // Default values.
-      this.pathToModule = import.meta.url
-      this.path = new URL('./icons/', this.pathToModule)
-      this.icons = this.shadowRoot.querySelector('#icons')
+      this.chat = this.shadowRoot.querySelector('#chat')
+      this.memory = this.shadowRoot.querySelector('#memory')
+      this.cam = this.shadowRoot.querySelector('#cam')
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      // Chat app icon
-      this.chat = document.createElement('img')
-      this.chat.setAttribute('src', `${this.path}chat.png`)
-      this.chat.setAttribute('title', 'Chat app')
-      this.chat.setAttribute('alt', 'my-messages-app')
-      this.icons.appendChild(this.chat)
-      // Memory game icon
-      this.memory = document.createElement('img')
-      this.memory.setAttribute('src', `${this.path}memorygame.png`)
-      this.memory.setAttribute('title', 'Memory game app')
-      this.memory.setAttribute('alt', 'my-memory-game')
-      this.icons.appendChild(this.memory)
-      // Memory game icon
-      this.cam = document.createElement('img')
-      this.cam.setAttribute('src', `${this.path}camera.png`)
-      this.cam.setAttribute('title', 'Camera app')
-      this.cam.setAttribute('alt', 'my-camera-app')
-      this.icons.appendChild(this.cam)
-      // Dispatch events to start apps
+      // Dispatch events to start applications.
       this.chat.addEventListener('click', this._openApp)
       this.memory.addEventListener('click', this._openApp)
       this.cam.addEventListener('click', this._openApp)

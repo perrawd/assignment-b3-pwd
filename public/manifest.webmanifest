@@ -1,7 +1,7 @@
 {
     "name": "Personal Web Desktop (PWD)",
     "short_name": "PWD",
-    "start_url": ".",
+    "start_url": "./",
     "display": "standalone",
     "background_color": "#ffffff",
     "description": "Assignment B3 PWD",
