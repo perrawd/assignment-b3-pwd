@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+const IMAGES_URL = new URL('./images/', import.meta.url).href
+
 /**
  * Define template.
  */
@@ -62,7 +64,9 @@ template.innerHTML = `
   <header>You're on camera. Smile :)</header>
   <video id="video">Video stream not available.</video>
   <canvas id="canvas"></canvas>
-  <div id="controls"></div>
+  <div id="controls">
+    <input type="image" src=${IMAGES_URL}shutter_button.svg alt="Shutter button" title="Shutter button" id="shutter">
+  </div>
 `
 
 /**
@@ -88,10 +92,9 @@ customElements.define('my-camera-app',
       this.path = new URL('./', this.pathToModule)
 
       // Initialization.
-      this._constrols = this.shadowRoot.querySelector('#controls')
       this._video = this.shadowRoot.querySelector('#video')
       this._canvas = this.shadowRoot.querySelector('#canvas')
-      this._constrols = this.shadowRoot.querySelector('#controls')
+      this.shutter = this.shadowRoot.querySelector('#shutter')
       this._shutterSound = new Audio(`${this.path}audio/camera-shutter.mp3`)
     }
 
@@ -102,11 +105,6 @@ customElements.define('my-camera-app',
       // Start video stream.
       this._camera()
       // Add camera shutter button
-      this.shutter = document.createElement('img')
-      this.shutter.setAttribute('src', `${this.path}images/shutter_button.svg`)
-      this.shutter.setAttribute('title', 'Shutter button')
-      this.shutter.setAttribute('id', 'shutter')
-      this._constrols.appendChild(this.shutter)
       this.shutter.addEventListener('click', () => {
         try {
           this._takePhoto()
@@ -134,7 +132,7 @@ customElements.define('my-camera-app',
      * Captures a frame from the video stream.
      */
     _takePhoto () {
-      // Captures the frame.
+      // Captures the frame and save to file.
       const context = this._canvas.getContext('2d')
       this._canvas.width = 640
       this._canvas.height = 480
