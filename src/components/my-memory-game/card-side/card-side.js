@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+const IMAGES_URL = new URL('./images/', import.meta.url).href
+
 /**
  * Define template.
  */
@@ -71,7 +73,7 @@ customElements.define('card-side',
     attributeChangedCallback (name, oldValue, newValue) {
       // Sets back side default to lnu image
       if (name === 'part' && newValue === 'back') {
-        this.shadowRoot.host.style.backgroundImage = 'url("./images/lnu-symbol.png")'
+        this.shadowRoot.host.style.backgroundImage = `url("${IMAGES_URL}lnu-symbol.png")`
       }
     }
   }

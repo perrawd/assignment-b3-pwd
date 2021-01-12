@@ -31,10 +31,17 @@ template.innerHTML = `
       margin: 0;
       padding: 0;
     }
+    img {
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      filter: invert(1);
+      height: 17px;
+    }
   </style>
 
   <div id="topbar"></div>
-  
+  <img src="./images/lnu-symbol.png">
 `
 
 /**

@@ -19,12 +19,14 @@ template.innerHTML = `
       text-align: center;
     }
     .message-board {
-      width: 500px;
+      width: 400px;
       height: auto;
       padding: 10px;
+      padding-left: 20px;
+      padding-right: 20px;
       margin: 10px;
       background-image: linear-gradient( 135deg, #FFF720 10%, #3CD500 100%);
-      border: 5px solid black;
+      border: 3px solid black;
       border-radius: 15px;
       text-align: center;
       font-size: 2rem;
@@ -37,6 +39,7 @@ template.innerHTML = `
     }
   </style>
   <div class="message-board">
+    <p>You completed the game in </p><br>
   </div>
   <div class="highscore-board">
       <p id="trophy">🏆</p>
@@ -102,7 +105,7 @@ customElements.define('high-score',
     attributeChangedCallback (name, oldValue, newValue) {
       // Sets background color to green if the player has completed game
       if (name === 'completedtime' && oldValue !== newValue) {
-        this._messageBoard.textContent = `You completed the game in ${this.getAttribute('completedtime')} seconds and with ${this.getAttribute('tries')} tries!`
+        this._messageBoard.textContent += `${this.getAttribute('completedtime')} seconds and with ${this.getAttribute('tries')} tries!`
       }
     }
   }
