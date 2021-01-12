@@ -30,13 +30,13 @@ template.innerHTML = `
       display: inline-block;
       margin: 1px
     }
-    #close:hover {
+    #closebutton:hover {
       cursor: default;
     }
   </style>
   <div part="window" id="window">
     <div id="close">
-      <img src=${IMAGES_URL}close.png width="18px height="18px">
+      <input type="image" src=${IMAGES_URL}close.png alt="close" title="Close application" id="closebutton" width="18px height="18px">
     </div>
   </div>
 `

@@ -15,19 +15,28 @@ template.innerHTML = `
   <style>
     :host {
       display: block;
-      background: blue;
+      background: #ffe259;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to top, #ffa751, #ffe259);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to top, #ffa751, #ffe259); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       width:400px;
       height:400px;
+      padding: 10px;
       text-align: center;
     }
     p {
-      margin: 0;
-      padding: 0;
+      font-size: small;
+    }
+    .credits {
+      font-size: x-small;
     }
   </style>
-
-  <p part="text">This is my Personal Web Desktop app!</p>
-  <button id="btn">button1</button>
+  <img src="./images/lnu-symbol.png" id="logo">
+  <h1>Personal Web Desktop</h1>
+  <p>1DV025 Assignment B3</p>
+  <p>Per Rawdin 2020-2021</p>
+  <p class="credits">Credits</p>
+  <p class="credits">PWD: https://www.w3schools.com/howto/howto_js_draggable.asp</p>
+  <p class="credits">Chat app: emoji-picker-element & popperjs</p>
 `
 
 /**
@@ -85,9 +94,6 @@ customElements.define('my-about-app',
     connectedCallback () {
       // TODO: Add your eventlisteners for mousedown, mouseup here. You also need to add mouseleave to stop writing
       //       when the mouse pointer leavs the bart board. This should stop the printing.
-      this.shadowRoot.querySelector('#btn').addEventListener('click', (e) => {
-        alert('clicked')
-      })
     }
 
     /**

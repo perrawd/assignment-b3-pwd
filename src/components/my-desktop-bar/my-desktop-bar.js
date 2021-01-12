@@ -31,17 +31,20 @@ template.innerHTML = `
       margin: 0;
       padding: 0;
     }
-    img {
+    #about{
       position: absolute;
       left: 5px;
       top: 3px;
       filter: invert(1);
       height: 17px;
     }
+    img:focus {
+    outline: 2px solid blue;
+    }
   </style>
 
   <div id="topbar"></div>
-  <img src="./images/lnu-symbol.png">
+  <input type="image" src="./images/lnu-symbol.png" id="about" alt="about" title="About"/>
 `
 
 /**
@@ -64,6 +67,7 @@ customElements.define('my-desktop-bar',
 
       // Get the p-element in which we add the text.
       this._clock = this.shadowRoot.querySelector('#topbar')
+      this._about = this.shadowRoot.querySelector('#about')
     }
 
     /**
@@ -73,6 +77,14 @@ customElements.define('my-desktop-bar',
       setInterval(() => {
         this._clock.textContent = this.currentTime()
       }, 1000)
+      // Open my-about-app
+      this._about.addEventListener('click', () => {
+        this.dispatchEvent(new CustomEvent('openApp', {
+          bubbles: true,
+          composed: true,
+          detail: { name: 'my-about-app' }
+        }))
+      })
     }
 
     /**

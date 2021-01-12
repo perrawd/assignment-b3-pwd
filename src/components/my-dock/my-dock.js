@@ -32,21 +32,21 @@ template.innerHTML = `
     #icons {
       max-height: 55px;
     }
-    img {
+    input {
       max-height: 55px;
       margin-left: 5px;
       margin-right: 5px;
     }
-
-    img:hover {
+    input:hover {
+      cursor: default;
       transition: transform .2s;
       transform: scale(1.1);
     }
   </style>
 <div id="icons">
-    <img src=${ICONS_URL}chat.png id="chat" alt="my-messages-app" title="Chat app">
-    <img src=${ICONS_URL}memorygame.png id="memory" alt="my-memory-game" title="Memory game app">
-    <img src=${ICONS_URL}camera.png id="cam" alt="my-camera-app" title="Camera app">
+  <input type="image" src=${ICONS_URL}chat.png id="chat" alt="my-messages-app" title="Chat app">
+  <input type="image" src=${ICONS_URL}memorygame.png id="memory" alt="my-memory-game" title="Memory game app">
+  <input type="image" src=${ICONS_URL}camera.png id="cam" alt="my-camera-app" title="Camera app">
 </div>
 `
 
