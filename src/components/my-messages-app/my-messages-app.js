@@ -6,6 +6,7 @@
  */
 import 'emoji-picker-element'
 import { createPopper } from '@popperjs/core'
+import Swal from 'sweetalert2'
 
 /**
  * Define template.
@@ -326,12 +327,23 @@ customElements.define('my-messages-app',
      * Add username if there is none in IndexedDB.
      *
      */
-    _addUsername () {
+    async _addUsername () {
+      const { value: username } = await Swal.fire({
+        title: 'Please input your username',
+        input: 'text',
+        inputPlaceholder: 'Enter your username',
+        backdrop: false,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        inputAttributes: {
+          required: true
+        }
+      })
+      console.log(username)
       // Open IndexedDB transaction.
       const db = this.request.result
       const transaction = db.transaction(['username'], 'readwrite')
       const objectStore = transaction.objectStore('username')
-      const username = prompt('Please input your username')
       objectStore.add({ name: username }, 'user0')
       const result = objectStore.get('user0')
       /**
