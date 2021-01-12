@@ -98,10 +98,42 @@ template.innerHTML = `
       margin: 5px;
     }
     .tooltip:not(.shown) {
-          display: none;
+      display: none;
     }
-    .mybubble {
-      
+    .bubble {
+      display: block;
+      padding: 5px;
+      max-width: 250px;
+      margin: 10px;
+      overflow-wrap: break-word;
+    }
+    .sender {
+      color: #000000;
+      font-weight: bold;
+      font-size: small;
+    }
+    .message {
+      color: #ffffff;
+    }
+    .date {
+      font-size: xx-small;
+    }
+    .me {
+      justify-content: start;
+      justify-items: start;
+      background: #43CC47; 
+      border-radius: 10px 10px 10px 0;
+    }
+    .row {
+      display: flex;
+      width: 100%;
+    }
+    .row .you {
+      margin-left: auto;
+      justify-content: end;
+      justify-items: end;
+      background: #1982FC; 
+      border-radius: 10px 10px 0 10px;
     }
   </style>
   <header></header>
@@ -109,7 +141,7 @@ template.innerHTML = `
   <div id="form">
     <div id="textarea">
       <form id="textform">
-        <textarea id="textinput" name="textform" placeholder="Skriv ditt meddelande här" rows="5" cols="50" wrap="hard" required></textarea>
+        <textarea id="textinput" name="textform" placeholder="Message #wp20" rows="5" cols="40" wrap="hard" required></textarea>
       </form>
     </div>
     <div id="buttons">
@@ -178,8 +210,8 @@ customElements.define('my-messages-app',
        * @param {object} event The event object.
        */
       this.request.onsuccess = (event) => {
-        this._getMessages(event)
         this._getUsername(event)
+        this._getMessages(event)
       }
     }
 
@@ -230,9 +262,9 @@ customElements.define('my-messages-app',
         const message = JSON.parse(event.data)
         let date = new Date()
         date = date.toLocaleString('sv-SE')
-        const senderText = document.createElement('p')
-        senderText.textContent = `${message.username}: ${message.data} (${date})`
-        this._main.appendChild(senderText)
+        message.date = date
+        console.log(message)
+        this._addMessage(message)
         // Scroll to focus on bottom conversation element.
         this._main.scrollTop = this._main.scrollHeight
         // Open IndexedDB transaction.
@@ -241,7 +273,7 @@ customElements.define('my-messages-app',
         const objectStore = transaction.objectStore('messages')
         // Add message to IndexedDB.
         if (message.username !== 'The Server') {
-          objectStore.add({ name: message.username, message: message.data, date: date }, date)
+          objectStore.add({ username: message.username, data: message.data, date: message.date }, date)
         }
       }
     }
@@ -293,9 +325,34 @@ customElements.define('my-messages-app',
      * @param {object} message The message object.
      */
     _addMessage (message) {
-      const senderText = document.createElement('p')
-      senderText.textContent = `${message.name}: ${message.message} (${message.date})`
-      this._main.appendChild(senderText)
+      // Create bubble.
+      const messagerow = document.createElement('div')
+      messagerow.classList.add('row')
+      const bubble = document.createElement('div')
+      bubble.classList.add('bubble')
+      if (message.username === this._userName) {
+        bubble.classList.add('me')
+      } else {
+        bubble.classList.add('you')
+      }
+      // Add name of sender.
+      const sender = document.createElement('div')
+      sender.classList.add('sender')
+      sender.textContent = `${message.username}`
+      bubble.appendChild(sender)
+      // Add message.
+      const msg = document.createElement('div')
+      msg.classList.add('message')
+      msg.textContent = `${message.data}`
+      bubble.appendChild(msg)
+      // Add date.
+      const date = document.createElement('div')
+      date.classList.add('date')
+      date.textContent = `${message.date}`
+      // Add message to conversations.
+      bubble.appendChild(date)
+      messagerow.appendChild(bubble)
+      this._main.appendChild(messagerow)
     }
 
     /**
@@ -339,7 +396,6 @@ customElements.define('my-messages-app',
           required: true
         }
       })
-      console.log(username)
       // Open IndexedDB transaction.
       const db = this.request.result
       const transaction = db.transaction(['username'], 'readwrite')

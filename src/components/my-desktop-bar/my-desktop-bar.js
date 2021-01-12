@@ -126,7 +126,6 @@ customElements.define('my-desktop-bar',
      */
     currentTime () {
       const currentTime = new Date()
-      // const currentDate = currentTime.toLocaleString('sv-SE').slice(0, 10)
       return currentTime.toLocaleString('sv-SE').slice(11, 16)
     }
   }
