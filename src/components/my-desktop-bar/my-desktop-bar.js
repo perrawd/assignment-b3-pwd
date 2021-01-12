@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+import Swal from 'sweetalert2'
+
 /**
  * Define template.
  */
@@ -38,13 +40,21 @@ template.innerHTML = `
       filter: invert(1);
       height: 17px;
     }
-    img:focus {
-    outline: 2px solid blue;
+    #about:hover {
+      cursor: default;
+      transition: transform .2s;
+      transform: scale(1.1);
+    }
+    #restart{
+      position: absolute;
+      right: 3px;
+      top: 3px;
     }
   </style>
 
   <div id="topbar"></div>
   <input type="image" src="./images/lnu-symbol.png" id="about" alt="about" title="About"/>
+  <input type="image" src="./images/power.svg" id="restart" alt="Restart application" title="Restart application"/>
 `
 
 /**
@@ -68,6 +78,7 @@ customElements.define('my-desktop-bar',
       // Get the p-element in which we add the text.
       this._clock = this.shadowRoot.querySelector('#topbar')
       this._about = this.shadowRoot.querySelector('#about')
+      this._rebootBtn = this.shadowRoot.querySelector('#restart')
     }
 
     /**
@@ -84,6 +95,26 @@ customElements.define('my-desktop-bar',
           composed: true,
           detail: { name: 'my-about-app' }
         }))
+      })
+      // Restart button
+      this._rebootBtn.addEventListener('click', () => {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Do you want to restart the desktop?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          backdrop: `
+          rgba(0,0,0,0.9)
+          `
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.dispatchEvent(new CustomEvent('restart', {
+              bubbles: true,
+              composed: true,
+              detail: { name: 'my-about-app' }
+            }))
+          }
+        })
       })
     }
 

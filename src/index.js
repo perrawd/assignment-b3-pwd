@@ -5,6 +5,7 @@
  * @version 1.0.0
  */
 
+// Service Worker registration.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
@@ -15,3 +16,8 @@ if ('serviceWorker' in navigator) {
     }
   })
 }
+
+window.addEventListener('restart', () => {
+  const newApp = document.createElement('my-desktop')
+  document.body.replaceChild(newApp, document.querySelector('my-desktop'))
+})

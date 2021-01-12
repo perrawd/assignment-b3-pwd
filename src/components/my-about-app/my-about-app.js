@@ -1,5 +1,5 @@
 /**
- * The bart-board web component module.
+ * The my-about-app web component module.
  *
  * @author Johan Leitet <johan.leitet@lnu.se>
  * @author Mats Loock <mats.loock@lnu.se>
@@ -33,9 +33,10 @@ template.innerHTML = `
   <img src="./images/lnu-symbol.png" id="logo">
   <h1>Personal Web Desktop</h1>
   <p>1DV025 Assignment B3</p>
-  <p>Per Rawdin 2020-2021</p>
+  <p>Per Rawdin</p>
+  <p class="credits">2020-2021</p>
   <p class="credits">Credits</p>
-  <p class="credits">PWD: https://www.w3schools.com/howto/howto_js_draggable.asp</p>
+  <p class="credits">PWD: https://www.w3schools.com/howto/howto_js_draggable.asp & sweetalert2</p>
   <p class="credits">Chat app: emoji-picker-element & popperjs</p>
 `
 
